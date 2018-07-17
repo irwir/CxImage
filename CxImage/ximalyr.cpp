@@ -1,6 +1,6 @@
 // xImaLyr.cpp : Layers functions
 /* 21/04/2003 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximage.h"
@@ -95,7 +95,7 @@ bool CxImage::LayerDelete(int32_t position)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImage::LayerDeleteAll()
 {
-	if (ppLayers) { 
+	if (ppLayers) {
 		for(int32_t n=0; n<info.nNumLayers;n++){ delete ppLayers[n]; }
 		delete [] ppLayers; ppLayers=0; info.nNumLayers = 0;
 	}

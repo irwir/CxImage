@@ -25,10 +25,10 @@ public:
 	virtual bool	PutC(uint8_t c);
 	virtual int32_t	GetC();
 	virtual char *	GetS(char *string, int32_t n);
-	virtual int32_t	Scanf(const char *format, void* output);
+	virtual int32_t	Scanf(const char * const format, void* output);
 
 protected:
-	bool	Alloc(uint32_t nBytes);
+	bool	Alloc(uint32_t dwNewLen);
 	void	Free();
 
 	uint8_t*	m_pBuffer;

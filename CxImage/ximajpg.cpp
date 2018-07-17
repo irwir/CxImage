@@ -2,9 +2,9 @@
  * File:	ximajpg.cpp
  * Purpose:	Platform Independent JPEG Image Class Loader and Writer
  * 07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
- 
+
 #include "ximajpg.h"
 
 #if CXIMAGE_SUPPORT_JPG
@@ -33,7 +33,7 @@ static void
 ima_jpeg_error_exit (j_common_ptr cinfo)
 {
 	/* cinfo->err really points to a my_error_mgr struct, so coerce pointer */
-	jpg_error_ptr myerr = (jpg_error_ptr) cinfo->err;
+	jpg_error_ptr myerr = static_cast<jpg_error_ptr>(cinfo->err);
 	/* Create the message */
 	myerr->pub.format_message (cinfo, myerr->buffer);
 	/* Send it to stderr, adding a newline */
@@ -45,7 +45,7 @@ CxImageJPG::CxImageJPG(): CxImage(CXIMAGE_FORMAT_JPG)
 {
 #if CXIMAGEJPG_SUPPORT_EXIF
 	m_exif = NULL;
-	memset(&info.ExifInfo, 0, sizeof(EXIFINFO));
+	info.ExifInfo = {};
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ bool CxImageJPG::Decode(CxFile * hFile)
 	/* Now we can initialize the JPEG decompression object. */
 	jpeg_create_decompress(&cinfo);
 
-	/* Step 2: specify data source (eg, a file) */
+	/* Step 2: specify data source (e.g., a file) */
 	//jpeg_stdio_src(&cinfo, infile);
     cinfo.src = &src;
 
@@ -177,7 +177,7 @@ bool CxImageJPG::Decode(CxFile * hFile)
 	if ((dwCodecOptions & DECODE_NOSMOOTH) != 0)
 		cinfo.do_fancy_upsampling = FALSE;
 
-//<DP>: Load true color images as RGB (no quantize) 
+//<DP>: Load true color images as RGB (no quantize)
 /* Step 4: set parameters for decompression */
 /*  if (cinfo.jpeg_color_space!=JCS_GRAYSCALE) {
  *	cinfo.quantize_colors = TRUE;
@@ -200,12 +200,12 @@ bool CxImageJPG::Decode(CxFile * hFile)
 		return true;
 	}
 
-	/* Step 5: Start decompressor */
+	/* Step 5: Start decompresser */
 	jpeg_start_decompress(&cinfo);
 
 	/* We may need to do some setup of our own at this point before reading
 	* the data.  After jpeg_start_decompress() we have the correct scaled
-	* output image dimensions available, as well as the output colormap
+	* output image dimensions available, as well as the output color map
 	* if we asked for color quantization.
 	*/
 	//Create the image using output dimensions <ignacio>
@@ -266,16 +266,15 @@ bool CxImageJPG::Decode(CxFile * hFile)
 	while (cinfo.output_scanline < cinfo.output_height) {
 
 		if (info.nEscape) longjmp(jerr.setjmp_buffer, 1); // <vho> - cancel decoding
-		
+
 		(void) jpeg_read_scanlines(&cinfo, buffer, 1);
 		// info.nProgress = (int32_t)(100*cinfo.output_scanline/cinfo.output_height);
-		//<DP> Step 6a: CMYK->RGB */ 
+		//<DP> Step 6a: CMYK->RGB */
 		if ((cinfo.num_components==4)&&(cinfo.quantize_colors==FALSE)){
-			uint8_t k,*dst,*src;
-			dst=iter.GetRow();
-			src=buffer[0];
+			uint8_t *dst = iter.GetRow();
+			uint8_t *src = buffer[0];
 			for(int32_t x3=0,x4=0; x3<(int32_t)info.dwEffWidth && x4<row_stride; x3+=3, x4+=4){
-				k=src[x4+3];
+				uint8_t k = src[x4+3];
 				dst[x3]  =(uint8_t)((k * src[x4+2])/255);
 				dst[x3+1]=(uint8_t)((k * src[x4+1])/255);
 				dst[x3+2]=(uint8_t)((k * src[x4+0])/255);
@@ -327,7 +326,7 @@ bool CxImageJPG::Encode(CxFile * hFile)
 	if (head.biClrUsed!=0 && !IsGrayScale()){
 		strcpy(info.szLastError,"JPEG can save only RGB or GreyScale images");
 		return false;
-	}	
+	}
 
 	// necessary for EXIF, and for roll backs
 	int32_t pos=hFile->Tell();
@@ -375,10 +374,10 @@ bool CxImageJPG::Encode(CxFile * hFile)
 		jpeg_destroy_compress(&cinfo);
 		return 0;
 	}
-	
+
 	/* Now we can initialize the JPEG compression object. */
 	jpeg_create_compress(&cinfo);
-	/* Step 2: specify data destination (eg, a file) */
+	/* Step 2: specify data destination (e.g., a file) */
 	/* Note: steps 2 and 3 can be done in either order. */
 	/* Here we use the library-supplied code to send compressed data to a
 	* stdio stream.  You can also write your own code to do something else.

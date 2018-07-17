@@ -1,6 +1,6 @@
 // xImaSel.cpp : Selection functions
 /* 07/08/2001 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximage.h"
@@ -9,7 +9,7 @@
 /**
  * Checks if the image has a valid selection.
  */
-bool CxImage::SelectionIsValid()
+bool CxImage::SelectionIsValid() const
 {
 	return pSelection!=0;
 }
@@ -18,7 +18,7 @@ bool CxImage::SelectionIsValid()
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Gets the smallest rectangle that contains the selection 
+ * Gets the smallest rectangle that contains the selection
  */
 void CxImage::SelectionGetBox(RECT& r)
 {
@@ -58,7 +58,7 @@ bool CxImage::SelectionCreate()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Deallocates the selction.
+ * Deallocates the selection.
  */
 bool CxImage::SelectionDelete()
 {
@@ -75,7 +75,7 @@ bool CxImage::SelectionDelete()
 /**
  * Checks if the coordinates are inside the selection.
  */
-bool CxImage::SelectionIsInside(int32_t x, int32_t y)
+bool CxImage::SelectionIsInside(int32_t x, int32_t y) const
 {
 	if (IsInside(x,y)){
 		if (pSelection==NULL) return true;
@@ -88,7 +88,7 @@ bool CxImage::SelectionIsInside(int32_t x, int32_t y)
  * Checks if the coordinates are inside the selection.
  * "blind" version assumes that (x,y) is inside to the image.
  */
-bool CxImage::BlindSelectionIsInside(int32_t x, int32_t y)
+bool CxImage::BlindSelectionIsInside(int32_t x, int32_t y) const
 {
 #ifdef _DEBUG
 	if (!IsInside(x,y))
@@ -206,7 +206,7 @@ bool CxImage::SelectionCopy(CxImage &from)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Adds a polygonal region to the existing selection. points points to an array of POINT structures.
+ * Adds a polygonal region to the existing selection. points to an array of POINT structures.
  * Each structure specifies the x-coordinate and y-coordinate of one vertex of the polygon.
  * npoints specifies the number of POINT structures in the array pointed to by points.
  */
@@ -306,8 +306,8 @@ bool CxImage::SelectionAddPolygon(POINT *points, int32_t npoints, uint8_t level)
 		for(y=ymin;y<ymax;y++){
 			for(x=xmin;x<xmax;x++){
 				if (plocal[x+y*head.biWidth]==0){
-					// Subject: FLOOD FILL ROUTINE              Date: 12-23-97 (00:57)       
-					// Author:  Petter Holmberg                 Code: QB, QBasic, PDS        
+					// Subject: FLOOD FILL ROUTINE              Date: 12-23-97 (00:57)
+					// Author:  Petter Holmberg                 Code: QB, QBasic, PDS
 					// Origin:  petter.holmberg@usa.net         Packet: GRAPHICS.ABC
 					first=0;
 					last=1;
@@ -370,7 +370,7 @@ bool CxImage::SelectionAddPolygon(POINT *points, int32_t npoints, uint8_t level)
 							fx--;
 							fxx--;
 						}
-						
+
 						first++;
 						if (first == npix) first = 0;
 					}
@@ -380,9 +380,8 @@ bool CxImage::SelectionAddPolygon(POINT *points, int32_t npoints, uint8_t level)
 	}
 
 	//transfer the region
-	int32_t yoffset;
 	for (y=localbox.bottom; y<=localbox.top; y++){
-		yoffset = y * head.biWidth;
+		int32_t yoffset = y * head.biWidth;
 		for (x=localbox.left; x<=localbox.right; x++)
 			if (plocal[x + yoffset]!=1) pSelection[x + yoffset]=level;
 	}
@@ -520,16 +519,16 @@ void CxImage::SelectionSet(const int32_t x,const int32_t y,const uint8_t level)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Gets the Selection level for a single pixel 
+ * Gets the Selection level for a single pixel
  */
-uint8_t CxImage::SelectionGet(const int32_t x,const int32_t y)
+uint8_t CxImage::SelectionGet(const int32_t x,const int32_t y) const
 {
 	if (pSelection && IsInside(x,y)) return pSelection[x+y*head.biWidth];
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Rebuilds the SelectionBox 
+ * Rebuilds the SelectionBox
  */
 void CxImage::SelectionRebuildBox()
 {
@@ -581,10 +580,10 @@ void CxImage::SelectionRebuildBox()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Gets the Selection level for a single pixel 
+ * Gets the Selection level for a single pixel
  * "blind" version assumes that (x,y) is inside to the image.
  */
-uint8_t CxImage::BlindSelectionGet(const int32_t x,const int32_t y)
+uint8_t CxImage::BlindSelectionGet(const int32_t x,const int32_t y) const
 {
 #ifdef _DEBUG
 	if (!IsInside(x,y) || (pSelection==0))
@@ -638,7 +637,7 @@ bool CxImage::SelectionMirror()
 	if (!pSelection) return false;
 	uint8_t* pSelection2 = (uint8_t*)malloc(head.biWidth * head.biHeight);
 	if (!pSelection2) return false;
-	
+
 	uint8_t *iSrc,*iDst;
 	int32_t wdt=head.biWidth-1;
 	iSrc=pSelection + wdt;
@@ -651,7 +650,7 @@ bool CxImage::SelectionMirror()
 	}
 	free(pSelection);
 	pSelection=pSelection2;
-	
+
 	int32_t left = info.rSelectionBox.left;
 	info.rSelectionBox.left = head.biWidth - info.rSelectionBox.right;
 	info.rSelectionBox.right = head.biWidth - left;
@@ -664,7 +663,7 @@ bool CxImage::SelectionMirror()
  */
 bool CxImage::SelectionToHRGN(HRGN& region)
 {
-	if (pSelection && region){           
+	if (pSelection && region){
         for(int32_t y = 0; y < head.biHeight; y++){
             HRGN hTemp = NULL;
             int32_t iStart = -1;

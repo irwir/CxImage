@@ -12,7 +12,7 @@ CxMemFile::CxMemFile(uint8_t* pBuffer, uint32_t size)
 //////////////////////////////////////////////////////////
 CxMemFile::~CxMemFile()
 {
-	Close();
+	CxMemFile::Close();
 }
 //////////////////////////////////////////////////////////
 bool CxMemFile::Close()
@@ -38,7 +38,7 @@ bool CxMemFile::Open()
 //////////////////////////////////////////////////////////
 uint8_t* CxMemFile::GetBuffer(bool bDetachBuffer)
 {
-	//can only detach, avoid inadvertantly attaching to
+	//can only detach, avoid inadvertently attaching to
 	// memory that may not be ours [Jason De Arte]
 	if( bDetachBuffer )
 		m_bFreeOnClose = false;
@@ -82,7 +82,7 @@ size_t CxMemFile::Write(const void *buffer, size_t size, size_t count)
 
 	if (m_Position + nCount > m_Edge){
 		if (!Alloc(m_Position + nCount)){
-			return false;
+			return 0;
 		}
 	}
 
@@ -91,7 +91,7 @@ size_t CxMemFile::Write(const void *buffer, size_t size, size_t count)
 	m_Position += nCount;
 
 	if (m_Position > (int32_t)m_Size) m_Size = m_Position;
-	
+
 	return count;
 }
 //////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ bool CxMemFile::PutC(uint8_t c)
 	m_pBuffer[m_Position++] = c;
 
 	if (m_Position > (int32_t)m_Size) m_Size = m_Position;
-	
+
 	return true;
 }
 //////////////////////////////////////////////////////////
@@ -172,9 +172,9 @@ int32_t CxMemFile::GetC()
 char * CxMemFile::GetS(char *string, int32_t n)
 {
 	n--;
-	int32_t c,i=0;
+	int32_t i=0;
 	while (i<n){
-		c = GetC();
+		int32_t c = GetC();
 		if (c == EOF) return 0;
 		string[i++] = (char)c;
 		if (c == '\n') break;
@@ -183,7 +183,7 @@ char * CxMemFile::GetS(char *string, int32_t n)
 	return string;
 }
 //////////////////////////////////////////////////////////
-int32_t	CxMemFile::Scanf(const char *format, void* output)
+int32_t	CxMemFile::Scanf(const char * const format, void* output)
 {
 	return 0;
 }
@@ -196,12 +196,15 @@ bool CxMemFile::Alloc(uint32_t dwNewLen)
 		uint32_t dwNewBufferSize = (uint32_t)(((dwNewLen>>16)+1)<<16);
 
 		// allocate new buffer
-		if (m_pBuffer == NULL) m_pBuffer = (uint8_t*)malloc(dwNewBufferSize);
-		else	m_pBuffer = (uint8_t*)realloc(m_pBuffer, dwNewBufferSize);
+		uint8_t* n_pBuffer = (uint8_t*)realloc(m_pBuffer, dwNewBufferSize);
+		if (!n_pBuffer) {
+			free(m_pBuffer);
+			m_Edge = 0;
+		} else
+			m_Edge = dwNewBufferSize;
+		m_pBuffer = n_pBuffer;
 		// I own this buffer now (caller knows nothing about it)
 		m_bFreeOnClose = true;
-
-		m_Edge = dwNewBufferSize;
 	}
 	return (m_pBuffer!=0);
 }

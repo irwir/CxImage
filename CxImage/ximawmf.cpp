@@ -24,7 +24,7 @@
 
 	A StandardWindows Metafile looks like:
 	- Metafile Header (MEATAHEADER)
-	- Metafile Records 
+	- Metafile Records
 
 	A Placeable Metafile looks like:
 	- Aldus Header (METAFILEHEADER)
@@ -66,16 +66,16 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 	// Read the Metafile and convert to an Enhanced Metafile
 	METAFILEHEADER	mfh;
 	hMeta = ConvertWmfFiletoEmf(hFile, &mfh);
-	if (hMeta) {	// ok, it's a WMF
+	if (hMeta) {	// OK, it's a WMF
 
 /////////////////////////////////////////////////////////////////////
 //	We use the original WMF size information, because conversion to
 //	EMF adjusts the Metafile to Full Screen or does not set rclBounds at all
 //	ENHMETAHEADER	emh;
 //	uint32_t			uRet;
-//	uRet = GetEnhMetaFileHeader(hMeta,					// handle of enhanced metafile 
-//								sizeof(ENHMETAHEADER),	// size of buffer, in bytes 
-//								&emh); 					// address of buffer to receive data  
+//	uRet = GetEnhMetaFileHeader(hMeta,					// handle of enhanced metafile
+//								sizeof(ENHMETAHEADER),	// size of buffer, in bytes
+//								&emh); 					// address of buffer to receive data
 //	if (!uRet){
 //		DeleteEnhMetaFile(hMeta);
 //		return false;
@@ -109,7 +109,7 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 			return false; // definitively give up
 		}
 
-		// ok, it's an EMF; calculate canvas size
+		// OK, it's an EMF; calculate canvas size
 		cx = emh.rclBounds.right - emh.rclBounds.left;
 		cy = emh.rclBounds.bottom - emh.rclBounds.top;
 
@@ -119,7 +119,7 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 		//
 		//hDC = ::GetDC(0);
 		//float hscale = (float)GetDeviceCaps(hDC, HORZRES)/(100.0f * GetDeviceCaps(hDC, HORZSIZE));
-		//float vscale  =  (float)GetDeviceCaps(hDC, VERTRES)/(100.0f * GetDeviceCaps(hDC, VERTSIZE));
+		//float vscale = (float)GetDeviceCaps(hDC, VERTRES)/(100.0f * GetDeviceCaps(hDC, VERTSIZE));
 		//::ReleaseDC(0, hDC);
 		//cx = (int32_t)((emh.rclFrame.right - emh.rclFrame.left) * hscale);
 		//cy = (int32_t)((emh.rclFrame.bottom - emh.rclFrame.top) * vscale);
@@ -168,35 +168,35 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 
 			//retrieves optional palette entries from the specified enhanced metafile
 			PLOGPALETTE plogPal;
-			PBYTE pjTmp; 
-			HPALETTE hPal; 
+			PBYTE pjTmp;
+			HPALETTE hPal;
 			int32_t iEntries = GetEnhMetaFilePaletteEntries(hMeta, 0, NULL);
-			if (iEntries) { 
-				if ((plogPal = (PLOGPALETTE)GlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, 
-					sizeof(uint32_t) + sizeof(PALETTEENTRY)*iEntries )) == NULL) { 
+			if (iEntries) {
+				if ((plogPal = (PLOGPALETTE)GlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT,
+					sizeof(uint32_t) + sizeof(PALETTEENTRY)*iEntries )) == NULL) {
 					DeleteObject(hBitmap);
 					DeleteDC(hDC);
 					DeleteEnhMetaFile(hMeta);
 					strcpy(info.szLastError,"Cancelled");
 					return false;
-				} 
+				}
 
-				plogPal->palVersion = 0x300; 
-				plogPal->palNumEntries = (uint16_t) iEntries; 
-				pjTmp = (PBYTE) plogPal; 
-				pjTmp += 4; 
+				plogPal->palVersion = 0x300;
+				plogPal->palNumEntries = (uint16_t) iEntries;
+				pjTmp = (PBYTE) plogPal;
+				pjTmp += 4;
 
-				GetEnhMetaFilePaletteEntries(hMeta, iEntries, (PPALETTEENTRY)pjTmp); 
-				hPal = CreatePalette(plogPal); 
-				GlobalFree(plogPal); 
+				GetEnhMetaFilePaletteEntries(hMeta, iEntries, (PPALETTEENTRY)pjTmp);
+				hPal = CreatePalette(plogPal);
+				GlobalFree(plogPal);
 
-				SelectPalette(hDC, hPal, FALSE); 
-				RealizePalette(hDC); 
-			} 
-			
+				SelectPalette(hDC, hPal, FALSE);
+				RealizePalette(hDC);
+			}
+
 			// Play the Metafile into Memory DC
-			BOOL bRet = PlayEnhMetaFile(hDC,	// handle to a device context 
-									hMeta,	// handle to an enhanced metafile  
+			BOOL bRet = PlayEnhMetaFile(hDC,	// handle to a device context
+									hMeta,	// handle to an enhanced metafile
 									&rc); 	// pointer to bounding rectangle
 
 			SelectObject(hDC, hBitmapOld);
@@ -299,13 +299,13 @@ HENHMETAFILE CxImageWMF::ConvertWmfFiletoEmf(CxFile *fp, METAFILEHEADER *metafil
 	if (len < sizeof(METAFILEHEADER)) return (hMeta);
 
 	if (CheckMetafileHeader(metafileheader)) {
-		// This is a placeable metafile 
+		// This is a placeable metafile
 		// Convert the placeable format into something that can
-		// be used with GDI metafile functions 
+		// be used with GDI metafile functions
 		seekpos = sizeof(METAFILEHEADER);
 	} else {
 		// Not a placeable wmf. A windows metafile?
-		// at least not scaleable.
+		// at least not scalable.
 		// we could try to convert, but would loose ratio. don't allow this
 		return (hMeta);
 
@@ -323,9 +323,9 @@ HENHMETAFILE CxImageWMF::ConvertWmfFiletoEmf(CxFile *fp, METAFILEHEADER *metafil
 	// the metafile was a windows metafile or a placeable metafile
 	// so check to see if it is valid. There is really no good
 	// way to do this so just make sure that the mtType is either
-	// 1 or 2 (memory or disk file) 
+	// 1 or 2 (memory or disk file)
 	// in addition we compare the length of the METAHEADER against
-	// the length of the file. if filelength < len => no Metafile
+	// the length of the file. if file length < len => no Metafile
 
 	len = fp->Read(&mfHeader, 1, sizeof(METAHEADER));
 	if (len < sizeof(METAHEADER)) return (hMeta);
@@ -336,7 +336,7 @@ HENHMETAFILE CxImageWMF::ConvertWmfFiletoEmf(CxFile *fp, METAFILEHEADER *metafil
 	len = mfHeader.mtSize * 2;
 	if (len > lenFile) return (hMeta);
 
-	// Allocate memory for the metafile bits 
+	// Allocate memory for the metafile bits
 	p = (uint8_t *)malloc(len);
 	if (!p)	return (hMeta);
 
@@ -356,15 +356,13 @@ HENHMETAFILE CxImageWMF::ConvertWmfFiletoEmf(CxFile *fp, METAFILEHEADER *metafil
 
 	// scale the metafile (pixels/inch of metafile => pixels/inch of display)
 
-	METAFILEPICT	mfp;
+	METAFILEPICT	mfp = {};
 	int32_t cx1, cy1;
 	HDC hDC;
 
 	hDC = ::GetDC(0);
 	cx1 = ::GetDeviceCaps(hDC, LOGPIXELSX);
 	cy1 = ::GetDeviceCaps(hDC, LOGPIXELSY);
-
-	memset(&mfp, 0, sizeof(mfp));
 
 	mfp.mm = MM_ANISOTROPIC;
 	mfp.xExt = 10000; //(metafileheader->bbox.right - metafileheader->bbox.left) * cx1 / metafileheader->inch;
@@ -433,10 +431,10 @@ HENHMETAFILE CxImageWMF::ConvertEmfFiletoEmf(CxFile *pFile, ENHMETAHEADER *pemfh
 	if (!hMeta)	return NULL;	// oops.
 
 	// Get the Enhanced Metafile Header
-	uint32_t uRet = GetEnhMetaFileHeader(hMeta,				// handle of enhanced metafile 
-								sizeof(ENHMETAHEADER),	// size of buffer, in bytes 
-								pemfh); 				// address of buffer to receive data  
-  
+	uint32_t uRet = GetEnhMetaFileHeader(hMeta,				// handle of enhanced metafile
+								sizeof(ENHMETAHEADER),	// size of buffer, in bytes
+								pemfh); 				// address of buffer to receive data
+
 	if (!uRet) {
 		DeleteEnhMetaFile(hMeta);
 		return NULL;

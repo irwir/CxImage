@@ -50,7 +50,7 @@ public:
 		DECODE_QUALITY_VNG = 0x01,
 		DECODE_QUALITY_PPG = 0x02,
 		DECODE_QUALITY_AHD = 0x03,
-	}; 
+	};
 
 protected:
 

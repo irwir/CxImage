@@ -18,7 +18,7 @@
   #define cx_catch catch (const char *message)
 #else
   #define cx_try bool cx_error=false;
-  #define cx_throw(message) {cx_error=true; if(strcmp(message,"")) strncpy(info.szLastError,message,255); goto cx_error_catch;}
+  #define cx_throw(message) {cx_error=true; if(*message) strncpy(info.szLastError,message,255); goto cx_error_catch;}
   #define cx_catch cx_error_catch: char message[]=""; if(cx_error)
 #endif
 
@@ -53,7 +53,7 @@
  #define CXIMAGE_SUPPORT_WMF 0
 #endif
 
-#if !defined(WIN32) && !defined(_WIN32_WCE)
+#if !defined(_WIN32) && !defined(_WIN32_WCE)
  #undef CXIMAGE_SUPPORT_WINDOWS
  #define CXIMAGE_SUPPORT_WINDOWS 0
 #endif
@@ -70,7 +70,8 @@
 #endif
 
 
-#if defined(WIN32) || defined(_WIN32_WCE)
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <tchar.h>
 #endif
@@ -92,11 +93,11 @@ typedef struct tagcomplex {
 
 #endif
 
-#if defined(WIN32) || defined(_WIN32_WCE)
+#if defined(_WIN32) || defined(_WIN32_WCE)
  #include "stdint.h"
 #endif
 
-#if !defined(WIN32) && !defined(_WIN32_WCE)
+#if !defined(_WIN32) && !defined(_WIN32_WCE)
 
 #include <stdint.h>
 #include <stdlib.h>

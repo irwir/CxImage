@@ -26,7 +26,7 @@
  *
  * Release Notes: This file contains a decoder routine for GIF images
  * which is similar, structurally, to the original routine by Steve Wilhite.
- * It is, however, somewhat noticably faster in most cases.
+ * It is, however, somewhat noticeably faster in most cases.
  *
  * ==========================================================
  */
@@ -38,7 +38,7 @@
 
 #if CXIMAGE_SUPPORT_GIF
 
-typedef int16_t    code_int;   
+typedef int16_t    code_int;
 
 /* Various error codes used by decoder */
 #define OUT_OF_MEMORY -10
@@ -72,7 +72,7 @@ typedef struct tag_gifgce{
 } struct_gifgce;
 
 typedef struct tag_dscgif{		/* Logic Screen Descriptor  */
-  char header[6];				/* Firma and version */
+  char header[6];				/* Signature and version */
   uint16_t scrwidth;
   uint16_t scrheight;
   char pflds;
@@ -89,8 +89,8 @@ typedef struct tag_image{      /* Image Descriptor */
 } struct_image;
 
 typedef struct tag_TabCol{		/* Tabla de colores */
-  int16_t colres;					/* color resolution */
-  int16_t sogct;					/* size of global color table */
+  int16_t colres;				/* color resolution */
+  int16_t sogct;				/* size of global color table */
   rgb_color paleta[256];		/* paleta */
 } struct_TabCol;
 
@@ -124,7 +124,7 @@ public:
 
 //	bool Load(const TCHAR * imageFileName){ return CxImage::Load(imageFileName,CXIMAGE_FORMAT_GIF);}
 //	bool Save(const TCHAR * imageFileName){ return CxImage::Save(imageFileName,CXIMAGE_FORMAT_GIF);}
-	
+
 	bool Decode(CxFile * fp);
 	bool Decode(FILE *fp) { CxIOFile file(fp); return Decode(&file); }
 
@@ -150,7 +150,7 @@ protected:
 	void EncodeComment(CxFile *fp);
 	bool EncodeRGB(CxFile *fp);
 	void GifMix(CxImage & imgsrc2, struct_image & imgdesc);
-	
+
 	struct_gifgce gifgce;
 
 	int32_t             curx, cury;
@@ -186,17 +186,17 @@ protected:
 	int16_t slot;                          /* Last read code */
 
 	/* The following static variables are used
-	* for seperating out codes */
+	* for separating out codes */
 	int16_t navail_bytes;              /* # bytes left in block */
 	int16_t nbits_left;                /* # bits left in current uint8_t */
 	uint8_t b1;                           /* Current uint8_t */
 	uint8_t * byte_buff;               /* Current block */
 	uint8_t *pbytes;                      /* Pointer to next uint8_t in block */
-	/* The reason we have these seperated like this instead of using
+	/* The reason we have these separated like this instead of using
 	* a structure like the original Wilhite code did, is because this
 	* stuff generally produces significantly faster code when compiled...
 	* This code is full of similar speedups...  (For a good book on writing
-	* C for speed or for space optomisation, see Efficient C by Tom Plum,
+	* C for speed or for space optimisation, see Efficient C by Tom Plum,
 	* published by Plum-Hall Associates...)
 	*/
 	uint8_t * stack;            /* Stack for storing pixels */
