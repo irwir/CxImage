@@ -2,7 +2,7 @@
  * File:	ximajas.cpp
  * Purpose:	Platform Independent JasPer Image Class Loader and Writer
  * 12/Apr/2003 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximajas.h"
@@ -36,7 +36,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 
 	fmt = jas_image_getfmt(in);
 	if (fmt<0)
-		cx_throw("error: unknowm format");
+		cx_throw("error: unknown format");
 
 	image = jas_image_decode(in, fmt, 0);
 	if (!image){
@@ -67,7 +67,7 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 #endif
 
 	//if (fmt<0)
-	//	cx_throw("error: unknowm format");
+	//	cx_throw("error: unknown format");
 
 	int32_t x,y,w,h,depth,cmptno;
 

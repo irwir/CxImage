@@ -28,9 +28,9 @@ extern "C" {
  #include <pngstruct.h>
  #include <pnginfo.h>
 #else
- #include "../png/png.h"
- #include "../png/pngstruct.h"
- #include "../png/pnginfo.h"
+ #include "../libpng/png.h"
+ #include "../libpng/pngstruct.h"
+ #include "../libpng/pnginfo.h"
 #endif
 }
 
@@ -58,7 +58,7 @@ public:
 		ENCODE_BEST_SPEED =          2 << 1,
 		ENCODE_BEST_COMPRESSION =    3 << 1,
 		ENCODE_DEFAULT_COMPRESSION = 4 << 1
-	}; 
+	};
 
 protected:
 	void ima_png_error(png_struct *png_ptr, char *message);
@@ -85,7 +85,7 @@ protected:
     static void PNGAPI user_error_fn(png_structp png_ptr,png_const_charp error_msg)
 	{
 		strncpy((char*)png_ptr->error_ptr,error_msg,255);
-		longjmp(png_ptr->png_jmpbuf, 1);
+		longjmp(png_ptr->jmp_buf_local, 1);
 	}
 };
 

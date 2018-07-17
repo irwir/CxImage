@@ -28,7 +28,7 @@ public:
 	virtual int32_t	Scanf(const char *format, void* output);
 
 protected:
-	bool	Alloc(uint32_t nBytes);
+	bool	Alloc(uint32_t dwNewLen);
 	void	Free();
 
 	uint8_t*	m_pBuffer;

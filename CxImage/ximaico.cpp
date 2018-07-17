@@ -2,7 +2,7 @@
  * File:	ximaico.cpp
  * Purpose:	Platform Independent ICON Image Class Loader and Writer (MS version)
  * 07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximaico.h"
@@ -193,8 +193,7 @@ bool CxImageICO::Decode(CxFile *hFile)
 							// find a color index, which is not used in the image
 							// it is almost sure to find one, bcs. nobody uses all possible colors for an icon
 
-							uint8_t colorsUsed[256];
-							memset(colorsUsed, 0, sizeof(colorsUsed));
+							uint8_t colorsUsed[256] = {};
 
 							for (y = 0; y < head.biHeight; y++){
 								for (x = 0; x < head.biWidth; x++){
@@ -322,7 +321,7 @@ bool CxImageICO::Encode(CxFile * hFile, bool bAppend, int32_t nPageCount)
 	int32_t nPages = nPageCount;
 	if (nPages<1) nPages = 1;
 
-	ICONHEADER icon_header={0,1,nPages};
+	ICONHEADER icon_header = {0, 1, (uint16_t)nPages};
 
 	if (!bAppend)
 		m_dwImageOffset = sizeof(ICONHEADER) + nPages * sizeof(ICONDIRENTRY);
@@ -344,8 +343,8 @@ bool CxImageICO::Encode(CxFile * hFile, bool bAppend, int32_t nPageCount)
 		head.biWidth,
 		2*head.biHeight,
 		1,
-		(uint16_t)bitcount,
-		0, imagesize,
+		(WORD)bitcount,
+		0, (DWORD)imagesize,
 		0, 0, 0, 0
 	};
 

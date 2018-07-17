@@ -1,6 +1,6 @@
 // xImaCodec.cpp : Encode Decode functions
 /* 07/08/2001 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximage.h"
@@ -86,7 +86,7 @@ bool CxImage::EncodeSafeCheck(CxFile *hFile)
 	return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-//#ifdef WIN32
+//#ifdef _WIN32
 //bool CxImage::Save(LPCWSTR filename, uint32_t imagetype)
 //{
 //	FILE* hFile;	//file handle to write the image
@@ -95,20 +95,20 @@ bool CxImage::EncodeSafeCheck(CxFile *hFile)
 //	fclose(hFile);
 //	return bOK;
 //}
-//#endif //WIN32
+//#endif //_WIN32
 ////////////////////////////////////////////////////////////////////////////////
 // For UNICODE support: char -> TCHAR
 /**
  * Saves to disk the image in a specific format.
  * \param filename: file name
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
-bool CxImage::Save(const TCHAR * filename, uint32_t imagetype)
+bool CxImage::Save(LPCTSTR filename, uint32_t imagetype)
 {
 	FILE* hFile;	//file handle to write the image
 
-#ifdef WIN32
+#ifdef _WIN32
 	if ((hFile=_tfopen(filename,_T("wb")))==NULL)  return false;	// For UNICODE support
 #else
 	if ((hFile=fopen(filename,"wb"))==NULL)  return false;
@@ -123,7 +123,7 @@ bool CxImage::Save(const TCHAR * filename, uint32_t imagetype)
  * Saves to disk the image in a specific format.
  * \param hFile: file handle, open and enabled for writing.
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode(FILE *hFile, uint32_t imagetype)
 {
@@ -138,7 +138,7 @@ bool CxImage::Encode(FILE *hFile, uint32_t imagetype)
  * the application must free the buffer, see also FreeMemory().
  * \param size: output memory buffer size.
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode(uint8_t * &buffer, int32_t &size, uint32_t imagetype)
 {
@@ -160,7 +160,7 @@ bool CxImage::Encode(uint8_t * &buffer, int32_t &size, uint32_t imagetype)
  * Saves to disk the image in a specific format.
  * \param hFile: file handle (CxMemFile or CxIOFile), with write access.
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  * \sa ENUM_CXIMAGE_FORMATS
  */
 bool CxImage::Encode(CxFile *hFile, uint32_t imagetype)
@@ -168,8 +168,12 @@ bool CxImage::Encode(CxFile *hFile, uint32_t imagetype)
 
 #if CXIMAGE_SUPPORT_BMP
 	if (CXIMAGE_FORMAT_BMP==imagetype){
-		CxImageBMP *newima = new CxImageBMP;
-		if (!newima) return false;
+		CxImageBMP *newima;
+		try {
+			newima = new CxImageBMP;
+		} catch (...) {
+			return false;
+		}
 		newima->Ghost(this);
 		if (newima->Encode(hFile)){
 			delete newima;
@@ -243,8 +247,12 @@ bool CxImage::Encode(CxFile *hFile, uint32_t imagetype)
 #endif
 #if CXIMAGE_SUPPORT_PNG
 	if (CXIMAGE_FORMAT_PNG==imagetype){
-		CxImagePNG *newima = new CxImagePNG;
-		if (!newima) return false;
+		CxImagePNG *newima;
+		try {
+			newima = new CxImagePNG;
+		} catch (...) {
+			return false;
+		}
 		newima->Ghost(this);
 		if (newima->Encode(hFile)){
 			delete newima;
@@ -349,19 +357,19 @@ bool CxImage::Encode(CxFile *hFile, uint32_t imagetype)
 #if CXIMAGE_SUPPORT_JASPER
 	if (
  #if	CXIMAGE_SUPPORT_JP2
-		CXIMAGE_FORMAT_JP2==imagetype || 
+		CXIMAGE_FORMAT_JP2==imagetype ||
  #endif
  #if	CXIMAGE_SUPPORT_JPC
-		CXIMAGE_FORMAT_JPC==imagetype || 
+		CXIMAGE_FORMAT_JPC==imagetype ||
  #endif
  #if	CXIMAGE_SUPPORT_PGX
-		CXIMAGE_FORMAT_PGX==imagetype || 
+		CXIMAGE_FORMAT_PGX==imagetype ||
  #endif
  #if	CXIMAGE_SUPPORT_PNM
-		CXIMAGE_FORMAT_PNM==imagetype || 
+		CXIMAGE_FORMAT_PNM==imagetype ||
  #endif
  #if	CXIMAGE_SUPPORT_RAS
-		CXIMAGE_FORMAT_RAS==imagetype || 
+		CXIMAGE_FORMAT_RAS==imagetype ||
  #endif
 		 false ){
 		CxImageJAS *newima = new CxImageJAS;
@@ -436,7 +444,7 @@ bool CxImage::Encode(CxFile *hFile, uint32_t imagetype)
  * \param pImages: array of CxImage pointers.
  * \param pagecount: number of images.
  * \param imagetype: can be CXIMAGE_FORMAT_TIF or CXIMAGE_FORMAT_GIF.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode(FILE * hFile, CxImage ** pImages, int32_t pagecount, uint32_t imagetype)
 {
@@ -450,7 +458,7 @@ bool CxImage::Encode(FILE * hFile, CxImage ** pImages, int32_t pagecount, uint32
  * \param pImages: array of CxImage pointers.
  * \param pagecount: number of images.
  * \param imagetype: can be CXIMAGE_FORMAT_TIF, CXIMAGE_FORMAT_GIF or CXIMAGE_FORMAT_ICO.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode(CxFile * hFile, CxImage ** pImages, int32_t pagecount, uint32_t imagetype)
 {
@@ -496,13 +504,13 @@ bool CxImage::Encode(CxFile * hFile, CxImage ** pImages, int32_t pagecount, uint
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * exports the image into a RGBA buffer, Useful for OpenGL applications.
+ * exports the image into an RGBA buffer, Useful for OpenGL applications.
  * \param buffer: output memory buffer pointer. Must be NULL,
  * the function allocates and fill the memory,
  * the application must free the buffer, see also FreeMemory().
  * \param size: output memory buffer size.
  * \param bFlipY: direction of Y axis. default = false.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode2RGBA(uint8_t * &buffer, int32_t &size, bool bFlipY)
 {
@@ -521,10 +529,10 @@ bool CxImage::Encode2RGBA(uint8_t * &buffer, int32_t &size, bool bFlipY)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * exports the image into a RGBA buffer, Useful for OpenGL applications.
+ * exports the image into an RGBA buffer, Useful for OpenGL applications.
  * \param hFile: file handle (CxMemFile or CxIOFile), with write access.
  * \param bFlipY: direction of Y axis. default = false.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Encode2RGBA(CxFile *hFile, bool bFlipY)
 {
@@ -558,7 +566,7 @@ bool CxImage::Encode2RGBA(CxFile *hFile, bool bFlipY)
  *
  * \param filename: file name
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
 //bool CxImage::Load(const char * filename, uint32_t imagetype)
@@ -573,7 +581,7 @@ bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
 	if ( GetTypeIndexFromId(imagetype) ){
 		FILE* hFile;	//file handle to read the image
 
-#ifdef WIN32
+#ifdef _WIN32
 		if ((hFile=_tfopen(filename,_T("rb")))==NULL)  return false;	// For UNICODE support
 #else
 		if ((hFile=fopen(filename,"rb"))==NULL)  return false;
@@ -590,7 +598,7 @@ bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
 	// if failed, try automatic recognition of the file...
 	FILE* hFile;
 
-#ifdef WIN32
+#ifdef _WIN32
 	if ((hFile=_tfopen(filename,_T("rb")))==NULL)  return false;	// For UNICODE support
 #else
 	if ((hFile=fopen(filename,"rb"))==NULL)  return false;
@@ -604,7 +612,7 @@ bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
 	return bOK;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef WIN32
+#ifdef _WIN32
 //bool CxImage::Load(LPCWSTR filename, uint32_t imagetype)
 //{
 //	/*FILE* hFile;	//file handle to read the image
@@ -641,7 +649,7 @@ bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
  * \param hRes: the resource handle returned by FindResource().
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS.
  * \param hModule: NULL for internal resource, or external application/DLL hinstance returned by LoadLibray.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::LoadResource(HRSRC hRes, uint32_t imagetype, HMODULE hModule)
 {
@@ -651,8 +659,8 @@ bool CxImage::LoadResource(HRSRC hRes, uint32_t imagetype, HMODULE hModule)
 		char* lpVoid=(char*)LockResource(hMem);
 		if (lpVoid){
 			// FILE* fTmp=tmpfile(); doesn't work with network
-			/*char tmpPath[MAX_PATH] = {0};
-			char tmpFile[MAX_PATH] = {0};
+			/*char tmpPath[MAX_PATH] = {};
+			char tmpFile[MAX_PATH] = {};
 			GetTempPath(MAX_PATH,tmpPath);
 			GetTempFileName(tmpPath,"IMG",0,tmpFile);
 			FILE* fTmp=fopen(tmpFile,"w+b");
@@ -671,14 +679,14 @@ bool CxImage::LoadResource(HRSRC hRes, uint32_t imagetype, HMODULE hModule)
 	} else strcpy(info.szLastError,"Unable to load resource!");
 	return false;
 }
-#endif //WIN32
+#endif //_WIN32
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Constructor from file name, see Load()
  * \param filename: file name
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
  */
-// 
+//
 // > filename: file name
 // > imagetype: specify the image format (CXIMAGE_FORMAT_BMP,...)
 // For UNICODE support: char -> TCHAR
@@ -729,7 +737,7 @@ CxImage::CxImage(uint8_t * buffer, uint32_t size, uint32_t imagetype)
  * \param buffer: memory buffer
  * \param size: size of buffer
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Decode(uint8_t * buffer, uint32_t size, uint32_t imagetype)
 {
@@ -741,7 +749,7 @@ bool CxImage::Decode(uint8_t * buffer, uint32_t size, uint32_t imagetype)
  * Loads an image from file handle.
  * \param hFile: file handle, with read access.
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Decode(FILE *hFile, uint32_t imagetype)
 {
@@ -753,7 +761,7 @@ bool CxImage::Decode(FILE *hFile, uint32_t imagetype)
  * Loads an image from CxFile object
  * \param hFile: file handle (CxMemFile or CxIOFile), with read access.
  * \param imagetype: file format, see ENUM_CXIMAGE_FORMATS
- * \return true if everything is ok
+ * \return true if everything is OK
  * \sa ENUM_CXIMAGE_FORMATS
  */
 bool CxImage::Decode(CxFile *hFile, uint32_t imagetype)
@@ -767,9 +775,12 @@ bool CxImage::Decode(CxFile *hFile, uint32_t imagetype)
 
 #if CXIMAGE_SUPPORT_BMP
 	if (CXIMAGE_FORMAT_UNKNOWN==imagetype || CXIMAGE_FORMAT_BMP==imagetype){
-		CxImageBMP *newima = new CxImageBMP;
-		if (!newima)
+		CxImageBMP *newima;
+		try {
+			newima = new CxImageBMP;
+		} catch (...) {
 			return false;
+		}
 		newima->CopyInfo(*this);
 		if (newima->Decode(hFile)) {
 			Transfer(*newima);
@@ -845,9 +856,12 @@ bool CxImage::Decode(CxFile *hFile, uint32_t imagetype)
 #endif
 #if CXIMAGE_SUPPORT_PNG
 	if (CXIMAGE_FORMAT_UNKNOWN==imagetype || CXIMAGE_FORMAT_PNG==imagetype){
-		CxImagePNG *newima = new CxImagePNG;
-		if (!newima)
+		CxImagePNG *newima;
+		try {
+			newima = new CxImagePNG;
+		} catch (...) {
 			return false;
+		}
 		newima->CopyInfo(*this);
 		if (newima->Decode(hFile)) {
 			Transfer(*newima);
@@ -1000,19 +1014,19 @@ bool CxImage::Decode(CxFile *hFile, uint32_t imagetype)
 #if CXIMAGE_SUPPORT_JASPER
 	if (CXIMAGE_FORMAT_UNKNOWN==imagetype ||
 #if	CXIMAGE_SUPPORT_JP2
-	 CXIMAGE_FORMAT_JP2==imagetype || 
+	 CXIMAGE_FORMAT_JP2==imagetype ||
 #endif
 #if	CXIMAGE_SUPPORT_JPC
-	 CXIMAGE_FORMAT_JPC==imagetype || 
+	 CXIMAGE_FORMAT_JPC==imagetype ||
 #endif
 #if	CXIMAGE_SUPPORT_PGX
-	 CXIMAGE_FORMAT_PGX==imagetype || 
+	 CXIMAGE_FORMAT_PGX==imagetype ||
 #endif
 #if	CXIMAGE_SUPPORT_PNM
-	 CXIMAGE_FORMAT_PNM==imagetype || 
+	 CXIMAGE_FORMAT_PNM==imagetype ||
 #endif
 #if	CXIMAGE_SUPPORT_RAS
-	 CXIMAGE_FORMAT_RAS==imagetype || 
+	 CXIMAGE_FORMAT_RAS==imagetype ||
 #endif
 	 false ){
 		CxImageJAS *newima = new CxImageJAS;

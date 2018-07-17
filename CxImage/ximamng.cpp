@@ -2,7 +2,7 @@
  * File:	ximamng.cpp
  * Purpose:	Platform Independent MNG Image Class Loader and Writer
  * Author:	07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximamng.h"
@@ -109,10 +109,10 @@ static mng_ptr mymnggetalphaline( mng_handle mng, mng_uint32 line )
 // timer
 static mng_uint32 mymnggetticks(mng_handle mng)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	return (mng_uint32)GetTickCount();
 #else
-  return 0;
+	return 0;
 #endif
 }
 
@@ -145,7 +145,7 @@ static mng_bool mymngerror(mng_handle mng, mng_int32 code, mng_int8 severity, mn
 CxImageMNG::CxImageMNG(): CxImage(CXIMAGE_FORMAT_MNG)
 {
 	hmng = NULL;
-	memset(&mnginfo,0,sizeof(mngstuff));
+	mnginfo = {};
 	mnginfo.nBkgndIndex = -1;
 	mnginfo.speed = 1.0f;
 }
@@ -186,7 +186,7 @@ void CxImageMNG::SetCallbacks(mng_handle mng)
 // can't use the CxImage implementation because it looses mnginfo
 bool CxImageMNG::Load(const TCHAR * imageFileName){
 	FILE* hFile;	//file handle to read the image
-#ifdef WIN32
+#ifdef _WIN32
 	if ((hFile=_tfopen(imageFileName,_T("rb")))==NULL)  return false;	// For UNICODE support
 #else
 	if ((hFile=fopen(imageFileName,"rb"))==NULL)  return false;
@@ -209,7 +209,7 @@ bool CxImageMNG::Decode(CxFile *hFile)
 		// set the file we want to play
 		mnginfo.file = hFile;
 
-		// Set the colorprofile, lcms uses this:
+		// Set the color profile, lcms uses this:
 		mng_set_srgb(hmng, MNG_TRUE );
 		// Set white as background color:
 		uint16_t Red,Green,Blue;
@@ -229,9 +229,9 @@ bool CxImageMNG::Decode(CxFile *hFile)
 
 		// read in the image
 		info.nNumFrames=0;
-		int32_t retval=MNG_NOERROR;
+//		int32_t retval=MNG_NOERROR;
 
-		retval = mng_readdisplay(hmng);
+		int32_t retval = mng_readdisplay(hmng);
 
 		if (retval != MNG_NOERROR && retval != MNG_NEEDTIMERWAIT){
 			mng_store_error(hmng,retval,0,0);

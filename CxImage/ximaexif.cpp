@@ -2,7 +2,7 @@
  * File:	ximaexif.cpp
  * Purpose:	EXIF reader
  * 18/Aug/2002 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  * based on jhead-1.8 by Matthias Wandel <mwandel(at)rim(dot)net>
  */
 
@@ -17,8 +17,7 @@ CxImageJPG::CxExifInfo::CxExifInfo(EXIFINFO* info)
 		m_exifinfo = info;
 		freeinfo = false;
 	} else {
-		m_exifinfo = new EXIFINFO;
-		memset(m_exifinfo,0,sizeof(EXIFINFO));
+		m_exifinfo = new EXIFINFO();
 		freeinfo = true;
 	}
 
@@ -492,7 +491,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
 
             case TAG_FNUMBER:
                 /* Simplest way of expressing aperture, so I trust it the most.
-                   (overwrite previously computd value if there is one)
+                   (overwrite previously computed value if there is one)
                    */
                 m_exifinfo->ApertureFNumber = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
@@ -521,7 +520,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
                 break;
 
             case TAG_SUBJECT_DISTANCE:
-                /* Inidcates the distacne the autofocus camera is focused to.
+                /* Indicates the distance the autofocus camera is focused to.
                    Tends to be less accurate as distance increases.
                 */
                 m_exifinfo->Distance = (float)ConvertAnyFormat(ValuePtr, Format);
@@ -529,7 +528,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
 
             case TAG_EXPOSURETIME:
                 /* Simplest way of expressing exposure time, so I
-                   trust it most.  (overwrite previously computd value
+                   trust it most.  (overwrite previously computed value
                    if there is one) 
                 */
                 m_exifinfo->ExposureTime = 
@@ -645,10 +644,9 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
         }
 
         if (Tag == TAG_EXIF_OFFSET || Tag == TAG_INTEROP_OFFSET){
-            uint8_t * SubdirStart;
 			unsigned Offset = Get32u(ValuePtr);
 			if (Offset>8){
-				SubdirStart = OffsetBase + Offset;
+				uint8_t *SubdirStart = OffsetBase + Offset;
 				if (SubdirStart < OffsetBase || 
 					SubdirStart >= OffsetBase+ExifLength){
 					strcpy(m_szLastError,"Illegal subdirectory link");
@@ -667,11 +665,9 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
            of each directory.  This has got to be the result of a
            committee!  
         */
-        uint8_t * SubdirStart;
-        unsigned Offset;
-        Offset = Get16u(DirStart+2+12*NumDirEntries);
+        unsigned Offset = Get16u(DirStart+2+12*NumDirEntries);
         if (Offset){
-            SubdirStart = OffsetBase + Offset;
+            uint8_t *SubdirStart = OffsetBase + Offset;
             if (SubdirStart < OffsetBase 
                 || SubdirStart >= OffsetBase+ExifLength){
                 strcpy(m_szLastError,"Illegal subdirectory link");
@@ -735,7 +731,6 @@ double CxImageJPG::CxExifInfo::ConvertAnyFormat(void * ValuePtr, int32_t Format)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageJPG::CxExifInfo::process_COM (const uint8_t * Data, int32_t length)
 {
-    int32_t ch;
     char Comment[MAX_COMMENT+1];
     int32_t nch;
     int32_t a;
@@ -745,7 +740,7 @@ void CxImageJPG::CxExifInfo::process_COM (const uint8_t * Data, int32_t length)
     if (length > MAX_COMMENT) length = MAX_COMMENT; // Truncate if it won't fit in our structure.
 
     for (a=2;a<length;a++){
-        ch = Data[a];
+        int32_t ch = Data[a];
 
         if (ch == '\r' && Data[a+1] == '\n') continue; // Remove cr followed by lf.
 
@@ -765,12 +760,9 @@ void CxImageJPG::CxExifInfo::process_COM (const uint8_t * Data, int32_t length)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageJPG::CxExifInfo::process_SOFn (const uint8_t * Data, int32_t marker)
 {
-    int32_t data_precision, num_components;
-
-    data_precision = Data[2];
     m_exifinfo->Height = Get16m((void*)(Data+3));
     m_exifinfo->Width = Get16m((void*)(Data+5));
-    num_components = Data[7];
+    int32_t num_components = Data[7];
 
     if (num_components == 3){
         m_exifinfo->IsColor = 1;
@@ -780,6 +772,7 @@ void CxImageJPG::CxExifInfo::process_SOFn (const uint8_t * Data, int32_t marker)
 
     m_exifinfo->Process = marker;
 
+    //int32_t data_precision = Data[2];
     //if (ShowTags) printf("JPEG image is %uw * %uh, %d color components, %d bits per sample\n",
     //               ImageInfo.Width, ImageInfo.Height, num_components, data_precision);
 }
@@ -836,14 +829,10 @@ bool CxImageJPG::CxExifInfo::EncodeExif(CxFile * hFile)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageJPG::CxExifInfo::DiscardAllButExif()
 {
-    Section_t ExifKeeper;
-    Section_t CommentKeeper;
-    int32_t a;
+    Section_t ExifKeeper = {};
+    Section_t CommentKeeper = {};
 
-    memset(&ExifKeeper, 0, sizeof(ExifKeeper));
-    memset(&CommentKeeper, 0, sizeof(ExifKeeper));
-
-    for (a=0;a<SectionsRead;a++){
+    for (int32_t a=0; a<SectionsRead; ++a) {
         if (Sections[a].Type == M_EXIF && ExifKeeper.Type == 0){
             ExifKeeper = Sections[a];
         }else if (Sections[a].Type == M_COM && CommentKeeper.Type == 0){
@@ -854,22 +843,18 @@ void CxImageJPG::CxExifInfo::DiscardAllButExif()
         }
     }
     SectionsRead = 0;
-    if (ExifKeeper.Type){
+    if (ExifKeeper.Type)
         Sections[SectionsRead++] = ExifKeeper;
-    }
-    if (CommentKeeper.Type){
+
+    if (CommentKeeper.Type)
         Sections[SectionsRead++] = CommentKeeper;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void* CxImageJPG::CxExifInfo::FindSection(int32_t SectionType)
 {
-    int32_t a;
-    for (a=0;a<SectionsRead-1;a++){
-        if (Sections[a].Type == SectionType){
+    for (int32_t a=0; a<SectionsRead-1; ++a)
+        if (Sections[a].Type == SectionType)
             return &Sections[a];
-        }
-    }
     // Could not be found.
     return NULL;
 }

@@ -2,7 +2,7 @@
  * File:	ximaraw.cpp
  * Purpose:	Platform Independent RAW Image Class Loader
  * 16/Dec/2007 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  * 
  * CxImageRAW (c) May/2006 pdw63
  *

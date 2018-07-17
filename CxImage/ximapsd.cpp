@@ -2,7 +2,7 @@
  * File:	ximapsd.cpp
  * Purpose:	Platform Independent PSD Image Class Loader
  * Dec/2010 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  *
  * libpsd (c) 2004-2007 Graphest Software
  *
@@ -58,7 +58,7 @@ namespace MyPSD
 			//		8		Duotone
 			//		9		Lab				The first three values in the color data are lightness, a chrominance,
 			//								and b chrominance.
-			//								Lightness is a 16–bit value from 0...100. The chromanance components
+			//								Lightness is a 16–bit value from 0...100. The chrominance components
 			//								are each 16–bit values from –128...127. Gray values
 			//								are represented by chrominance components of 0. Pure
 			//								white=100,0,0.
@@ -150,7 +150,7 @@ namespace MyPSD
 			//							cyan=0,65535,65535,65535.
 			//		7		Lab			The first three values in the color data are lightness, a chrominance,
 			//							and b chrominance.
-			//							Lightness is a 16–bit value from 0...10000. The chromanance components
+			//							Lightness is a 16–bit value from 0...10000. The chrominance components
 			//							are each 16–bit values from –12800...12700. Gray values
 			//							are represented by chrominance components of 0. Pure
 			//							white=10000,0,0.
@@ -171,7 +171,7 @@ namespace MyPSD
 			// thumbnail information in the same format except the data section is
 			// (blue, green, red). The Adobe Photoshop 4.0 format is at resource ID
 			// and the Adobe Photoshop 5.0 format is at resource ID 1036.
-			// Table 2–5: Thumnail resource header
+			// Table 2–5: Thumbnail resource header
 			//	Type		Name		Description
 			//-------------------------------------------
 			//	4 bytes		format			= 1 (kJpegRGB). Also supports kRawRGB (0).
@@ -223,15 +223,15 @@ namespace MyPSD
 
 		bool	mbCopyright;
 
-		int Calculate(unsigned char* c, int nDigits);
-		void XYZToRGB(const double X, const double Y, const double Z, int &R, int &G, int &B);
-		void LabToRGB(const int L, const int a, const int b, int &R, int &G, int &B );
-		void CMYKToRGB(const double C, const double M, const double Y, const double K, int &R, int &G, int &B);
+		static int Calculate(unsigned char* c, int nDigits);
+		static void XYZToRGB(const double X, const double Y, const double Z, int &R, int &G, int &B);
+		static void LabToRGB(const int L, const int a, const int b, int &R, int &G, int &B );
+		static void CMYKToRGB(const double C, const double M, const double Y, const double K, int &R, int &G, int &B);
 
 		bool ReadHeader(CxFile &f, HEADER_INFO& header_info);
 		bool ReadColourModeData(CxFile &f, COLOUR_MODE_DATA& colour_mode_data);
 		bool ReadImageResource(CxFile &f, IMAGE_RESOURCE& image_resource);
-		bool ReadLayerAndMaskInfoSection(CxFile &f); // Actually ignore it
+		static bool ReadLayerAndMaskInfoSection(CxFile &f); // Actually ignore it
 		int ReadImageData(CxFile &f);
 
 		int DecodeRawData(CxFile &pFile);
@@ -240,7 +240,7 @@ namespace MyPSD
 		void ProccessBuffer(unsigned char* pData = 0);
 
 	public:
-		CPSD(CxImage &image);
+		explicit CPSD(CxImage &image);
 		~CPSD();
 
 		int Load(LPCTSTR szPathName);
@@ -308,9 +308,9 @@ namespace MyPSD
 	{
 		// Standards used Observer = 2, Illuminant = D65
 		// ref_X = 95.047, ref_Y = 100.000, ref_Z = 108.883
-		const double ref_X = 95.047;
-		const double ref_Y = 100.000;
-		const double ref_Z = 108.883;
+//		const double ref_X = 95.047;
+//		const double ref_Y = 100.000;
+//		const double ref_Z = 108.883;
 
 		double var_X = X / 100.0;
 		double var_Y = Y / 100.0;
@@ -707,12 +707,12 @@ namespace MyPSD
 			char Signature[4];	// always equal 8BPS, do not read file if not
 			unsigned char Version[2];	// always equal 1, do not read file if not
 			char Reserved[6];	// must be zero
-			unsigned char Channels[2];	// numer of channels including any alpha channels, supported range 1 to 24
+			unsigned char Channels[2];	// number of channels including any alpha channels, supported range 1 to 24
 			unsigned char Rows[4];		// height in PIXELS, supported range 1 to 30000
 			unsigned char Columns[4];	// width in PIXELS, supported range 1 to 30000
 			unsigned char Depth[2];		// number of bpp
 			unsigned char Mode[2];		// colour mode of the file,
-			// Btmap=0, Grayscale=1, Indexed=2, RGB=3,
+			// Bitmap=0, Grayscale=1, Indexed=2, RGB=3,
 			// CMYK=4, Multichannel=7, Duotone=8, Lab=9
 		};
 
@@ -812,14 +812,13 @@ namespace MyPSD
 				int nPixels = header_info.nWidth * header_info.nHeight;
 				byte *pRGBA = new byte[nPixels * (bAlpha ? 4 : 3)];
 				byte *pSrc = pData, *pDst = pRGBA;
-				double C, M, Y, K;
 				int	nRed, nGreen, nBlue;
 				for (int i = 0; i < nPixels; i++, pSrc += header_info.nChannels, pDst += bAlpha ? 4 : 3)
 				{
-					C = (1.0 - (double)pSrc[0] / 256);
-					M = (1.0 - (double)pSrc[1] / 256);
-					Y = (1.0 - (double)pSrc[2] / 256);
-					K = (1.0 - (double)pSrc[3] / 256);
+					double C = (1.0 - (double)pSrc[0] / 256);
+					double M = (1.0 - (double)pSrc[1] / 256);
+					double Y = (1.0 - (double)pSrc[2] / 256);
+					double K = (1.0 - (double)pSrc[3] / 256);
 					
 					CMYKToRGB(C, M, Y, K, nRed, nGreen, nBlue);
 
@@ -843,12 +842,11 @@ namespace MyPSD
 				int nPixels = header_info.nWidth * header_info.nHeight;
 				byte *pRGB = new byte[nPixels * 3];
 				byte *pSrc = pData, *pDst = pRGB;
-				double C, M, Y, K;
 				int	nRed, nGreen, nBlue;
 				for (int i = 0; i < nPixels; i++, pSrc += header_info.nChannels, pDst += 3)
 				{
-					C = M = Y = K = 0;
-					C = (1.0 - (double)pSrc[0] / 256);
+					double M = 0, Y = 0, K = 0;
+					double C = (1.0 - (double)pSrc[0] / 256);
 					if (header_info.nChannels > 1) M = (1.0 - (double)pSrc[1] / 256);
 					if (header_info.nChannels > 2) Y = (1.0 - (double)pSrc[2] / 256);
 					if (header_info.nChannels > 3) K = (1.0 - (double)pSrc[3] / 256);
@@ -876,13 +874,12 @@ namespace MyPSD
 				byte *pSrc = pData, *pDst = pRGBA;
 
 				double L_coef = 256.f / 100.f, a_coef = 256.f / 256.f, b_coef = 256.f / 256.f;
-				int L, a, b;
 				int	nRed, nGreen, nBlue;
 				for (int i = 0; i < nPixels; i++, pSrc += header_info.nChannels, pDst += bAlpha ? 4 : 3)
 				{
-					L = (int)((float)pSrc[0] / L_coef);
-					a = (int)((float)pSrc[1] / a_coef - 128.0);
-					b = (int)((float)pSrc[2] / b_coef - 128.0);
+					int L = (int)((float)pSrc[0] / L_coef);
+					int a = (int)((float)pSrc[1] / a_coef - 128.0);
+					int b = (int)((float)pSrc[2] / b_coef - 128.0);
 
 					LabToRGB(L, a, b, nRed, nGreen, nBlue );
 
@@ -928,7 +925,6 @@ namespace MyPSD
 		int bytesPerPixelPerChannel = header_info.nBitsPerPixel / 8;
 
 		int nPixels = nWidth * nHeight;
-		int nTotalBytes = 0;
 
 		byte* pData = NULL;
 
@@ -952,7 +948,7 @@ namespace MyPSD
 				}
 
 				// and convert them to RGBARGBARGBA data (depends on number of channels)
-				nTotalBytes = nPixels * header_info.nChannels;
+				int nTotalBytes = nPixels * header_info.nChannels;
 				pData = new byte[nTotalBytes];
 				byte *pSource = pFileData;
 				for (int nChannel = 0; nChannel < header_info.nChannels; nChannel++)
@@ -1053,10 +1049,9 @@ namespace MyPSD
 		// transform raw data to the good one (RGBARGBARGBA...RGBA)
 		byte *pRawSource = pRawData;
 		byte *pData = new byte[nTotalBytes];
-		int nPixelCounter = 0;
 		for( int nColour = 0; nColour < header_info.nChannels; ++nColour )
 		{
-			nPixelCounter = nColour;
+			int nPixelCounter = nColour;
 			for (int nPos = 0; nPos < nPixels; nPos++, pRawSource++)
 			{
 				pData[nPixelCounter] = *pRawSource;

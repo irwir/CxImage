@@ -41,7 +41,7 @@
 #if !defined(__xfile_h)
 #define __xfile_h
 
-#if defined (WIN32) || defined (_WIN32_WCE)
+#if defined (_WIN32) || defined (_WIN32_WCE)
  #include <windows.h>
 #endif
 

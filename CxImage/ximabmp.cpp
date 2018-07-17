@@ -2,14 +2,14 @@
  * File:	ximabmp.cpp
  * Purpose:	Platform Independent BMP Image Class Loader and Writer
  * 07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximabmp.h"
 
 #if CXIMAGE_SUPPORT_BMP
 
-#include "ximaiter.h" 
+#include "ximaiter.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #if CXIMAGE_SUPPORT_ENCODE
@@ -22,17 +22,17 @@ bool CxImageBMP::Encode(CxFile * hFile)
 	BITMAPFILEHEADER	hdr;
 
 	hdr.bfType = 0x4d42;   // 'BM' WINDOWS_BITMAP_SIGNATURE
-	hdr.bfSize = GetSize() + 14 /*sizeof(BITMAPFILEHEADER)*/;
+	hdr.bfSize = (DWORD)(GetSize() + 14) /*sizeof(BITMAPFILEHEADER)*/;
 	hdr.bfReserved1 = hdr.bfReserved2 = 0;
-	hdr.bfOffBits = 14 /*sizeof(BITMAPFILEHEADER)*/ + head.biSize + GetPaletteSize();
+	hdr.bfOffBits = (DWORD)(14 /*sizeof(BITMAPFILEHEADER)*/ + head.biSize + GetPaletteSize());
 
-	hdr.bfType = m_ntohs(hdr.bfType); 
-	hdr.bfSize = m_ntohl(hdr.bfSize); 
-	hdr.bfOffBits = m_ntohl(hdr.bfOffBits); 
+	hdr.bfType = m_ntohs(hdr.bfType);
+	hdr.bfSize = m_ntohl(hdr.bfSize);
+	hdr.bfOffBits = m_ntohl(hdr.bfOffBits);
 
 #if CXIMAGE_SUPPORT_ALPHA
 	if (GetNumColors()==0 && AlphaIsValid()){
-	
+
 		BITMAPINFOHEADER  infohdr;
 		memcpy(&infohdr,&head,sizeof(BITMAPINFOHEADER));
 		infohdr.biCompression = BI_RGB;
@@ -60,7 +60,7 @@ bool CxImageBMP::Encode(CxFile * hFile)
 			}
 		}
 
-	} else 
+	} else
 #endif //CXIMAGE_SUPPORT_ALPHA
 	{
 		// Write the file header
@@ -88,8 +88,8 @@ bool CxImageBMP::Decode(CxFile * hFile)
   cx_try {
 	if (hFile->Read(&bf,min(14,sizeof(bf)),1)==0) cx_throw("Not a BMP");
 
-	bf.bfSize = m_ntohl(bf.bfSize); 
-	bf.bfOffBits = m_ntohl(bf.bfOffBits); 
+	bf.bfSize = m_ntohl(bf.bfSize);
+	bf.bfOffBits = m_ntohl(bf.bfOffBits);
 
     if (m_ntohs(bf.bfType) != BFT_BITMAP) { //do we have a RC HEADER?
         bf.bfOffBits = 0L;
@@ -140,10 +140,12 @@ bool CxImageBMP::Decode(CxFile * hFile)
         }
     }
 
-	if (info.nEscape) cx_throw("Cancelled"); // <vho> - cancel decoding
+	if (info.nEscape)
+		cx_throw("Cancelled"); // <vho> - cancel decoding
 
 	switch (dwBitCount) {
 		case 32 :
+		{
 			uint32_t bfmask[3];
 			if (dwCompression == BI_BITFIELDS)
 			{
@@ -165,9 +167,8 @@ bool CxImageBMP::Decode(CxFile * hFile)
 						AlphaCreate();
 						if (AlphaIsValid()){
 							bool bAlphaOk = false;
-							uint8_t* p;
 							for (int32_t y=0; y<head.biHeight; y++){
-								p = buff32 + 3 + head.biWidth * 4 * y;
+								uint8_t *p = buff32 + 3 + head.biWidth * 4 * y;
 								for (int32_t x=0; x<head.biWidth; x++){
 									if (*p) bAlphaOk = true;
 									AlphaSet(x,y,*p);
@@ -185,6 +186,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 				} else cx_throw("can't allocate memory");
 			} else cx_throw("unknown compression");
 			break;
+		}
 		case 24 :
 			if (bf.bfOffBits != 0L) hFile->Seek(off + bf.bfOffBits,SEEK_SET);
 			if (dwCompression == BI_RGB){
@@ -226,7 +228,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 				CImageIterator iter(this);
 
 				for (BOOL bContinue = TRUE; bContinue && hFile->Read(&status_byte, sizeof(uint8_t), 1);) {
-					
+
 					switch (status_byte) {
 						case RLE_COMMAND :
 							hFile->Read(&status_byte, sizeof(uint8_t), 1);
@@ -276,7 +278,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 										low_nibble = !low_nibble;
 									}
 									if ((((status_byte+1) >> 1) & 1 ) == 1)
-										hFile->Read(&second_byte, sizeof(uint8_t), 1);												
+										hFile->Read(&second_byte, sizeof(uint8_t), 1);
 									break;
 							};
 							break;
@@ -341,11 +343,11 @@ bool CxImageBMP::Decode(CxFile * hFile)
 								}
 								default :
 									hFile->Read((void *)(iter.GetRow(scanline) + bits), sizeof(uint8_t) * status_byte, 1);
-									// align run length to even number of bytes 
+									// align run length to even number of bytes
 									if ((status_byte & 1) == 1)
-										hFile->Read(&second_byte, sizeof(uint8_t), 1);												
-									bits += status_byte;													
-									break;								
+										hFile->Read(&second_byte, sizeof(uint8_t), 1);
+									bits += status_byte;
+									break;
 							};
 							break;
 						default :
@@ -354,7 +356,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 							for (unsigned i = 0; i < status_byte; i++) {
 								if ((uint8_t*)(sline+bits) < (uint8_t*)(info.pImage+head.biSizeImage)){
 									*(sline + bits) = second_byte;
-									bits++;					
+									bits++;
 								} else {
 									break;
 								}
@@ -364,7 +366,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 				}
 				break;
 			}
-			default :								
+			default :
 				cx_throw("compression type not supported");
 		}
 	}
@@ -372,7 +374,7 @@ bool CxImageBMP::Decode(CxFile * hFile)
 	if (bTopDownDib) Flip(); //<Flanders>
 
   } cx_catch {
-	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
+	if (!*message) strncpy(info.szLastError,message,255);
 	if (info.nEscape == -1 && info.dwType == CXIMAGE_FORMAT_BMP) return true;
 	return false;
   }
@@ -412,8 +414,8 @@ bool CxImageBMP::DibReadBitmapInfo(CxFile* fh, BITMAPINFOHEADER *pdib)
             pdib->biSize               = bc.bcSize;
             pdib->biWidth              = (uint32_t)bc.bcWidth;
             pdib->biHeight             = (uint32_t)bc.bcHeight;
-            pdib->biPlanes             =  bc.bcPlanes;
-            pdib->biBitCount           =  bc.bcBitCount;
+            pdib->biPlanes             = bc.bcPlanes;
+            pdib->biBitCount           = bc.bcBitCount;
             pdib->biCompression        = BI_RGB;
             pdib->biSizeImage          = 0;
             pdib->biXPelsPerMeter      = 0;

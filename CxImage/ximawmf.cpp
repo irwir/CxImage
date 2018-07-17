@@ -66,7 +66,7 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 	// Read the Metafile and convert to an Enhanced Metafile
 	METAFILEHEADER	mfh;
 	hMeta = ConvertWmfFiletoEmf(hFile, &mfh);
-	if (hMeta) {	// ok, it's a WMF
+	if (hMeta) {	// OK, it's a WMF
 
 /////////////////////////////////////////////////////////////////////
 //	We use the original WMF size information, because conversion to
@@ -109,7 +109,7 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 			return false; // definitively give up
 		}
 
-		// ok, it's an EMF; calculate canvas size
+		// OK, it's an EMF; calculate canvas size
 		cx = emh.rclBounds.right - emh.rclBounds.left;
 		cy = emh.rclBounds.bottom - emh.rclBounds.top;
 
@@ -119,7 +119,7 @@ bool CxImageWMF::Decode(CxFile *hFile, int32_t nForceWidth, int32_t nForceHeight
 		//
 		//hDC = ::GetDC(0);
 		//float hscale = (float)GetDeviceCaps(hDC, HORZRES)/(100.0f * GetDeviceCaps(hDC, HORZSIZE));
-		//float vscale  =  (float)GetDeviceCaps(hDC, VERTRES)/(100.0f * GetDeviceCaps(hDC, VERTSIZE));
+		//float vscale = (float)GetDeviceCaps(hDC, VERTRES)/(100.0f * GetDeviceCaps(hDC, VERTSIZE));
 		//::ReleaseDC(0, hDC);
 		//cx = (int32_t)((emh.rclFrame.right - emh.rclFrame.left) * hscale);
 		//cy = (int32_t)((emh.rclFrame.bottom - emh.rclFrame.top) * vscale);
@@ -356,15 +356,13 @@ HENHMETAFILE CxImageWMF::ConvertWmfFiletoEmf(CxFile *fp, METAFILEHEADER *metafil
 
 	// scale the metafile (pixels/inch of metafile => pixels/inch of display)
 
-	METAFILEPICT	mfp;
+	METAFILEPICT	mfp = {};
 	int32_t cx1, cy1;
 	HDC hDC;
 
 	hDC = ::GetDC(0);
 	cx1 = ::GetDeviceCaps(hDC, LOGPIXELSX);
 	cy1 = ::GetDeviceCaps(hDC, LOGPIXELSY);
-
-	memset(&mfp, 0, sizeof(mfp));
 
 	mfp.mm = MM_ANISOTROPIC;
 	mfp.xExt = 10000; //(metafileheader->bbox.right - metafileheader->bbox.left) * cx1 / metafileheader->inch;

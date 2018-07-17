@@ -145,7 +145,7 @@ class CxFileJpg : public jpeg_destination_mgr, public jpeg_source_mgr
 public:
 	enum { eBufSize = 4096 };
 
-	CxFileJpg(CxFile* pFile)
+	explicit CxFileJpg(CxFile* pFile)
 	{
         m_pFile = pFile;
 
@@ -170,14 +170,14 @@ public:
 
 	static void InitDestination(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		pDest->next_output_byte = pDest->m_pBuffer;
 		pDest->free_in_buffer = eBufSize;
 	}
 
 	static boolean EmptyOutputBuffer(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		if (pDest->m_pFile->Write(pDest->m_pBuffer,1,eBufSize)!=(size_t)eBufSize)
 			ERREXIT(cinfo, JERR_FILE_WRITE);
 		pDest->next_output_byte = pDest->m_pBuffer;
@@ -187,7 +187,7 @@ public:
 
 	static void TermDestination(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		size_t datacount = eBufSize - pDest->free_in_buffer;
 		/* Write any data remaining in the buffer */
 		if (datacount > 0) {
@@ -202,16 +202,15 @@ public:
 
 	static void InitSource(j_decompress_ptr cinfo)
 	{
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
 		pSource->m_bStartOfFile = TRUE;
 	}
 
 	static boolean FillInputBuffer(j_decompress_ptr cinfo)
 	{
-		size_t nbytes;
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
-		nbytes = pSource->m_pFile->Read(pSource->m_pBuffer,1,eBufSize);
-		if (nbytes <= 0){
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
+		size_t nbytes = pSource->m_pFile->Read(pSource->m_pBuffer,1,eBufSize);
+		if (nbytes <= 0) {
 			if (pSource->m_bStartOfFile)	//* Treat empty input file as fatal error 
 				ERREXIT(cinfo, JERR_INPUT_EMPTY);
 			WARNMS(cinfo, JWRN_JPEG_EOF);
@@ -228,7 +227,7 @@ public:
 
 	static void SkipInputData(j_decompress_ptr cinfo, long num_bytes)
 	{
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
 		if (num_bytes > 0){
 			while (num_bytes > (int32_t)pSource->bytes_in_buffer){
 				num_bytes -= (int32_t)pSource->bytes_in_buffer;
