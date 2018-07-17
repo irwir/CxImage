@@ -2,7 +2,7 @@
  * File:	ximapcx.cpp
  * Purpose:	Platform Independent PCX Image Class Loader and Writer
  * 05/Jan/2002 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  *
  * based on ppmtopcx.c - convert a portable pixmap to PCX
  * Copyright (C) 1994 by Ingo Wilken (Ingo.Wilken@informatik.uni-oldenburg.de)
@@ -30,7 +30,7 @@ bool CxImagePCX::Decode(CxFile *hFile)
 	if (hFile == NULL) return false;
 
 	PCXHEADER pcxHeader;
-	int32_t i, x, y, y2, nbytes, count, Height, Width;
+	int32_t i, x, y, y2, count;
 	uint8_t c, ColorMap[PCX_MAXCOLORS][3];
 	uint8_t *pcximage = NULL, *lpHead1 = NULL, *lpHead2 = NULL;
 	uint8_t *pcxplanes, *pcxpixels;
@@ -44,9 +44,9 @@ bool CxImagePCX::Decode(CxFile *hFile)
     if (pcxHeader.Manufacturer != PCX_MAGIC) cx_throw("Error: Not a PCX file");
     // Check for PCX run length encoding
     if (pcxHeader.Encoding != 1) cx_throw("PCX file has unknown encoding scheme");
- 
-    Width = (pcxHeader.Xmax - pcxHeader.Xmin) + 1;
-    Height = (pcxHeader.Ymax - pcxHeader.Ymin) + 1;
+
+    int32_t Width = (pcxHeader.Xmax - pcxHeader.Xmin) + 1;
+    int32_t Height = (pcxHeader.Ymax - pcxHeader.Ymin) + 1;
 	info.xDPI = pcxHeader.Hres;
 	info.yDPI = pcxHeader.Vres;
 
@@ -74,11 +74,11 @@ bool CxImagePCX::Decode(CxFile *hFile)
 
 	if (info.nEscape) cx_throw("Cancelled"); // <vho> - cancel decoding
 
-	//Read the image and check if it's ok
-    nbytes = pcxHeader.BytesPerLine * pcxHeader.ColorPlanes * Height;
+	//Read the image and check if it's OK
+    int32_t nbytes = pcxHeader.BytesPerLine * pcxHeader.ColorPlanes * Height;
     lpHead1 = pcximage = (uint8_t*)malloc(nbytes);
     while (nbytes > 0){
-		if (hFile == NULL || hFile->Eof()) cx_throw("corrupted PCX");
+		if (hFile->Eof()) cx_throw("corrupted PCX");
 
 		hFile->Read(&c,1,1);
 		if ((c & 0XC0) != 0XC0){ // Repeated group
@@ -104,7 +104,7 @@ bool CxImagePCX::Decode(CxFile *hFile)
     if (pcxHeader.BitsPerPixel == 8 && pcxHeader.ColorPlanes == 1){
 		hFile->Read(&c,1,1);
 		if (c != PCX_256_COLORS) cx_throw("bad color map signature");
-		
+
 		for (i = 0; i < PCX_MAXCOLORS; i++){
 			hFile->Read(&ColorMap[i][0],1,1);
 			hFile->Read(&ColorMap[i][1],1,1);
@@ -175,8 +175,7 @@ bool CxImagePCX::Encode(CxFile * hFile)
 
   cx_try
   {
-	PCXHEADER pcxHeader;
-	memset(&pcxHeader,0,sizeof(pcxHeader));
+	PCXHEADER pcxHeader = {};
 	pcxHeader.Manufacturer = PCX_MAGIC;
 	pcxHeader.Version = 5;
 	pcxHeader.Encoding = 1;
@@ -285,7 +284,7 @@ bool CxImagePCX::Encode(CxFile * hFile)
 		RGBQUAD *rgb = GetPalette();
 		bool binvert = false;
 		if (CompareColors(&rgb[0],&rgb[1])>0) binvert=(head.biBitCount==1);
-		
+
 		uint8_t* plane = (uint8_t*)malloc(pcxHeader.BytesPerLine);
 		uint8_t* raw = (uint8_t*)malloc(head.biWidth);
 
@@ -335,11 +334,11 @@ bool CxImagePCX::PCX_PlanesToPixels(uint8_t * pixels, uint8_t * bitplanes, int16
 
 	// Do the format conversion
 	for (i = 0; i < planes; i++){
-		int32_t pixbit, bits, mask;
+		int32_t pixbit, mask;
 		p = pixels;
 		pixbit = (1 << i);  // pixel bit for this plane
 		for (j = 0; j < bytesperline; j++){
-			bits = *bitplanes++;
+			int32_t bits = *bitplanes++;
 			for (mask = 0X80; mask != 0; mask >>= 1, p++)
 				if (bits & mask) *p |= pixbit;
 		}
@@ -355,7 +354,7 @@ bool CxImagePCX::PCX_UnpackPixels(uint8_t * pixels, uint8_t * bitplanes, int16_t
 {
 	register int32_t bits;
 	if (planes != 1) return false;
-	
+
 	if (bitsperpixel == 8){  // 8 bits/pixels, no unpacking needed
 		while (bytesperline-- > 0) *pixels++ = *bitplanes++;
 	} else if (bitsperpixel == 4){  // 4 bits/pixel, two pixels per byte
@@ -416,8 +415,8 @@ void CxImagePCX::PCX_PackPixels(const int32_t p,uint8_t &c, uint8_t &n, CxFile &
 ////////////////////////////////////////////////////////////////////////////////
 void CxImagePCX::PCX_PackPlanes(uint8_t* buff, const int32_t size, CxFile &f)
 {
-    uint8_t *start,*end;
-    uint8_t c, previous, count;
+    uint8_t *start, *end;
+    uint8_t previous, count;
 
 	start = buff;
     end = buff + size;
@@ -425,7 +424,7 @@ void CxImagePCX::PCX_PackPlanes(uint8_t* buff, const int32_t size, CxFile &f)
     count    = 1;
 
     while (start < end) {
-        c = *start++;
+        uint8_t c = *start++;
         if (c == previous && count < 63) {
             ++count;
             continue;

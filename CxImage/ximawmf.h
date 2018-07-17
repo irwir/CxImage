@@ -45,16 +45,16 @@
 
 	c) Size
 
-	Although the filesize of a Metafile may be very small, it might
+	Although the file size of a Metafile may be very small, it might
 	produce a Bitmap with a bombastic size. Assume you have a Metafile
 	with an image size of 6000*4000, which contains just one Metafile
-	record ((e.g. a line from (0,0) to (6000, 4000)). The filesize
+	record ((e.g. a line from (0,0) to (6000, 4000)). The file size
 	of this Metafile would be let's say 100kB. If we convert it to
 	a 6000*4000 Bitmap with 24 Bits/Pixes, the Bitmap would consume
 	about 68MB of memory.
 
-	I have choosen, to limit the size of the Bitmap to max.
-	screensize, to avoid memory problems.
+	I have chosen, to limit the size of the Bitmap to max.
+	screen size, to avoid memory problems.
 
 	If you want something else,
 	modify #define XMF_MAXSIZE_CX / XMF_MAXSIZE_CY below
@@ -82,7 +82,7 @@ typedef struct tagRECT16
 	int16_t	bottom;
 } RECT16;
 
-// taken from Windos 3.11 SDK Documentation (Programmer's Reference Volume 4: Resources)
+// taken from Windows 3.11 SDK Documentation (Programmer's Reference Volume 4: Resources)
 typedef struct tagMETAFILEHEADER
 {
 	uint32_t	key;		// always 0x9ac6cdd7

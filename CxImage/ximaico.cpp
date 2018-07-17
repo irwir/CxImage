@@ -2,7 +2,7 @@
  * File:	ximaico.cpp
  * Purpose:	Platform Independent ICON Image Class Loader and Writer (MS version)
  * 07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximaico.h"
@@ -145,7 +145,7 @@ bool CxImageICO::Decode(CxFile *hFile)
 						bool bNeedAlpha = false;
 						if (!AlphaIsValid()){
 							AlphaCreate();
-						} else { 
+						} else {
 							bNeedAlpha=true; //32bit icon
 						}
 						for (y = 0; y < head.biHeight; y++) {
@@ -189,12 +189,11 @@ bool CxImageICO::Decode(CxFile *hFile)
 
 						// <vho> - Transparency support w/o Alpha support
 						if (c <= 8){ // only for icons with less than 256 colors (XP icons need alpha).
-							  
+
 							// find a color index, which is not used in the image
 							// it is almost sure to find one, bcs. nobody uses all possible colors for an icon
 
-							uint8_t colorsUsed[256];
-							memset(colorsUsed, 0, sizeof(colorsUsed));
+							uint8_t colorsUsed[256] = {};
 
 							for (y = 0; y < head.biHeight; y++){
 								for (x = 0; x < head.biWidth; x++){
@@ -234,7 +233,7 @@ bool CxImageICO::Decode(CxFile *hFile)
 						SetTransIndex(0); //empty mask, set black as transparent color
 						Negative();
 					}
-				} 
+				}
 				free(mask);
 			}
 			free(icon_list);
@@ -274,13 +273,13 @@ bool CxImageICO::Encode(CxFile * hFile, CxImage ** pImages, int32_t nPageCount)
 			if (!ghost.Encode(hFile,false,nPageCount))
 				cx_throw("Error writing ICO file header");
 		}
-		if (!ghost.Encode(hFile,true,nPageCount)) 
+		if (!ghost.Encode(hFile,true,nPageCount))
 			cx_throw("Error saving ICO image header");
 	}
 	for (i=0; i<nPageCount; i++){	//write bodies
 		ghost.Ghost(pImages[i]);
 		ghost.info.nNumFrames = nPageCount;
-		if (!ghost.Encode(hFile,true,i)) 
+		if (!ghost.Encode(hFile,true,i))
 			cx_throw("Error saving ICO body");
 	}
 
@@ -322,7 +321,7 @@ bool CxImageICO::Encode(CxFile * hFile, bool bAppend, int32_t nPageCount)
 	int32_t nPages = nPageCount;
 	if (nPages<1) nPages = 1;
 
-	ICONHEADER icon_header={0,1,nPages};
+	ICONHEADER icon_header = {0, 1, (uint16_t)nPages};
 
 	if (!bAppend)
 		m_dwImageOffset = sizeof(ICONHEADER) + nPages * sizeof(ICONDIRENTRY);
@@ -344,8 +343,8 @@ bool CxImageICO::Encode(CxFile * hFile, bool bAppend, int32_t nPageCount)
 		head.biWidth,
 		2*head.biHeight,
 		1,
-		(uint16_t)bitcount,
-		0, imagesize,
+		(WORD)bitcount,
+		0, (DWORD)imagesize,
 		0, 0, 0, 0
 	};
 

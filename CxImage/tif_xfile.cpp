@@ -2,7 +2,7 @@
  * TIFF file IO, using CxFile.
  */
 
-#ifdef WIN32
+#ifdef _WIN32
  #include <windows.h>
 #endif
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 #include "xfile.h"
 
-static tsize_t 
+static tsize_t
 _tiffReadProcEx(thandle_t fd, tdata_t buf, tsize_t size)
 {
 	return (tsize_t)((CxFile*)fd)->Read(buf, 1, size);
@@ -31,7 +31,7 @@ _tiffWriteProcEx(thandle_t fd, tdata_t buf, tsize_t size)
 static toff_t
 _tiffSeekProcEx(thandle_t fd, toff_t off, int whence)
 {
-	if ( off == 0xFFFFFFFF ) 
+	if (off == 0xFFFFFFFF)
 		return 0xFFFFFFFF;
 	if (!((CxFile*)fd)->Seek(off, whence))
 		return 0xFFFFFFFF;
@@ -74,9 +74,9 @@ TIFF*
 TIFFOpen(const char* name, const char* mode)
 {
 	static const char module[] = "TIFFOpen";
-   FILE* stream = fopen(name, mode);
-	if (stream == NULL) 
-   {
+	FILE* stream = fopen(name, mode);
+	if (stream == NULL)
+	{
 		TIFFError(module, "%s: Cannot open", name);
 		return NULL;
 	}
@@ -162,7 +162,7 @@ static void
 Win32WarningHandler(const char* module, const char* fmt, va_list ap)
 {
 #ifdef _DEBUG
-#if (!defined(_CONSOLE) && !defined(_WIN32_WCE) && defined(WIN32))
+#if (!defined(_CONSOLE) && !defined(_WIN32_WCE) && defined(_WIN32))
 	LPSTR szTitle;
 	LPSTR szTmp;
 	LPCSTR szTitleText = "%s Warning";
@@ -192,7 +192,7 @@ static void
 Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 {
 #ifdef _DEBUG
-#if (!defined(_CONSOLE) && !defined(_WIN32_WCE) && defined(WIN32))
+#if (!defined(_CONSOLE) && !defined(_WIN32_WCE) && defined(_WIN32))
 	LPSTR szTitle;
 	LPSTR szTmp;
 	LPCSTR szTitleText = "%s Error";

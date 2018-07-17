@@ -38,11 +38,11 @@ class CxImageBMP: public CxImage
 public:
 	CxImageBMP(): CxImage(CXIMAGE_FORMAT_BMP) {};
 
-	bool Decode(CxFile * hFile);
+	bool Decode(CxFile *hFile);
 	bool Decode(FILE *hFile) { CxIOFile file(hFile); return Decode(&file); }
 
 #if CXIMAGE_SUPPORT_ENCODE
-	bool Encode(CxFile * hFile);
+	bool Encode(CxFile *hFile);
 	bool Encode(FILE *hFile) { CxIOFile file(hFile); return Encode(&file); }
 #endif // CXIMAGE_SUPPORT_ENCODE
 
@@ -55,7 +55,7 @@ protected:
 #define BFT_CURSOR 0x5450   /* 'PT' */
 
 #ifndef WIDTHBYTES
-#define WIDTHBYTES(i)           ((unsigned)((i+31)&(~31))/8)  /* ULONG aligned ! */
+#define WIDTHBYTES(i)           ((unsigned)(((i)+31)&(~31))/8)  /* ULONG aligned ! */
 #endif
 
 #endif

@@ -2,7 +2,7 @@
  * File:	ximatga.cpp
  * Purpose:	Platform Independent TGA Image Class Loader and Writer
  * 05/Jan/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximatga.h"
@@ -75,7 +75,7 @@ bool CxImageTGA::Decode(CxFile *hFile)
 #endif //CXIMAGE_SUPPORT_ALPHA
 
 	if (!IsValid()) cx_throw("TGA Create failed");
-	
+
 	if (info.nEscape) cx_throw("Cancelled"); // <vho> - cancel decoding
 
 	if (tgaHead.CmapType != 0){ // read the palette
@@ -92,7 +92,7 @@ bool CxImageTGA::Decode(CxFile *hFile)
 	bool bYReversed = ((tgaHead.ImagDesc & 32) == 32);
 
     CImageIterator iter(this);
-	uint8_t rleLeftover = 255; //for images with illegal packet boundary 
+	uint8_t rleLeftover = 255; //for images with illegal packet boundary
 	uint8_t* pDest;
     for (int32_t y=0; y < tgaHead.ImageHeight; y++){
 
@@ -150,7 +150,7 @@ bool CxImageTGA::Encode(CxFile * hFile)
     tgaHead.PixelDepth=(uint8_t)head.biBitCount;	// Pixel Depth
     tgaHead.ImagDesc=0;					// Image Descriptor
 
-	if (pAlpha && head.biBitCount==24) tgaHead.PixelDepth=32; 
+	if (pAlpha && head.biBitCount==24) tgaHead.PixelDepth=32;
 
 	tga_toh(&tgaHead);
 	hFile->Write(&tgaHead,sizeof(TGAHEADER),1);
@@ -166,7 +166,7 @@ bool CxImageTGA::Encode(CxFile * hFile)
 		}
 		hFile->Write(&pal,256*sizeof(rgb_color),1);
 	}
-	
+
 	CImageIterator iter(this);
 	uint8_t* pDest;
 	if (pAlpha==0 || head.biBitCount==8){
@@ -228,7 +228,7 @@ uint8_t CxImageTGA::ExpandCompressedLine(uint8_t* pDest,TGAHEADER* ptgaHead,CxFi
 #endif //CXIMAGE_SUPPORT_ALPHA
 				}
 				break;
-					 } 
+					 }
 			case 24: {
 				rgb_color triple;
 				hFile->Read(&triple,3,1);

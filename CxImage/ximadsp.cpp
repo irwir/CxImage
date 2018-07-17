@@ -1,6 +1,6 @@
 // xImaDsp.cpp : DSP functions
 /* 07/08/2001 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximage.h"
@@ -14,7 +14,7 @@
  * Converts the image to B&W.
  * The OptimalThreshold() function can be used for calculating the optimal threshold.
  * \param level: the lightness threshold.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Threshold(uint8_t level)
 {
@@ -49,7 +49,7 @@ bool CxImage::Threshold(uint8_t level)
  * Converts the image to B&W, using a threshold mask
  * \param pThresholdMask: the lightness threshold mask.
  * the pThresholdMask image must be grayscale with same with and height of the current image
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Threshold(CxImage* pThresholdMask)
 {
@@ -57,7 +57,7 @@ bool CxImage::Threshold(CxImage* pThresholdMask)
 	if (head.biBitCount == 1) return true;
 
 	if (!pThresholdMask) return false;
-	
+
 	if (!pThresholdMask->IsValid() ||
 		!pThresholdMask->IsGrayScale() ||
 		pThresholdMask->GetWidth() != GetWidth() ||
@@ -95,9 +95,9 @@ bool CxImage::Threshold(CxImage* pThresholdMask)
  * and preserves the colors for the unfiltered pixels.
  * \param level = the lightness threshold.
  * \param bDirection = false: filter dark pixels, true: filter light pixels
- * \param nBkgndColor =  filtered pixels are set to nBkgndColor color
+ * \param nBkgndColor = filtered pixels are set to nBkgndColor color
  * \param bSetAlpha = if true, sets also the alpha component for the filtered pixels, with nBkgndColor.rgbReserved
- * \return true if everything is ok
+ * \return true if everything is OK
  * \author [DP], [wangsongtao]
  */
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,9 +142,9 @@ bool CxImage::Threshold2(uint8_t level, bool bDirection, RGBQUAD nBkgndColor, bo
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract RGB channels from the image. Each channel is an 8 bit grayscale image. 
- * \param r,g,b: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract RGB channels from the image. Each channel is an 8 bit grayscale image.
+ * \param r,g,b: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitRGB(CxImage* r,CxImage* g,CxImage* b)
 {
@@ -184,9 +184,9 @@ bool CxImage::SplitRGB(CxImage* r,CxImage* g,CxImage* b)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract CMYK channels from the image. Each channel is an 8 bit grayscale image. 
- * \param c,m,y,k: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract CMYK channels from the image. Each channel is an 8 bit grayscale image.
+ * \param c,m,y,k: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitCMYK(CxImage* c,CxImage* m,CxImage* y,CxImage* k)
 {
@@ -223,9 +223,9 @@ bool CxImage::SplitCMYK(CxImage* c,CxImage* m,CxImage* y,CxImage* k)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract YUV channels from the image. Each channel is an 8 bit grayscale image. 
- * \param y,u,v: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract YUV channels from the image. Each channel is an 8 bit grayscale image.
+ * \param y,u,v: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitYUV(CxImage* y,CxImage* u,CxImage* v)
 {
@@ -258,9 +258,9 @@ bool CxImage::SplitYUV(CxImage* y,CxImage* u,CxImage* v)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract YIQ channels from the image. Each channel is an 8 bit grayscale image. 
- * \param y,i,q: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract YIQ channels from the image. Each channel is an 8 bit grayscale image.
+ * \param y,i,q: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitYIQ(CxImage* y,CxImage* i,CxImage* q)
 {
@@ -293,9 +293,9 @@ bool CxImage::SplitYIQ(CxImage* y,CxImage* i,CxImage* q)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract XYZ channels from the image. Each channel is an 8 bit grayscale image. 
- * \param x,y,z: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract XYZ channels from the image. Each channel is an 8 bit grayscale image.
+ * \param x,y,z: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitXYZ(CxImage* x,CxImage* y,CxImage* z)
 {
@@ -328,9 +328,9 @@ bool CxImage::SplitXYZ(CxImage* x,CxImage* y,CxImage* z)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Extract HSL channels from the image. Each channel is an 8 bit grayscale image. 
- * \param h,s,l: pointers to CxImage objects, to store the splited channels
- * \return true if everything is ok
+ * Extract HSL channels from the image. Each channel is an 8 bit grayscale image.
+ * \param h,s,l: pointers to CxImage objects, to store the spitted channels
+ * \return true if everything is OK
  */
 bool CxImage::SplitHSL(CxImage* h,CxImage* s,CxImage* l)
 {
@@ -383,7 +383,6 @@ RGBQUAD CxImage::RGBtoHSL(RGBQUAD lRGBColor)
 	uint8_t R,G,B;					/* input RGB values */
 	uint8_t H,L,S;					/* output HSL values */
 	uint8_t cMax,cMin;				/* max and min RGB values */
-	uint16_t Rdelta,Gdelta,Bdelta;	/* intermediate value: % of spread from max*/
 
 	R = lRGBColor.rgbRed;	/* get R, G, and B out of uint32_t */
 	G = lRGBColor.rgbGreen;
@@ -401,10 +400,10 @@ RGBQUAD CxImage::RGBtoHSL(RGBQUAD lRGBColor)
 			S = (uint8_t)((((cMax-cMin)*HSLMAX)+((cMax+cMin)/2))/(cMax+cMin));
 		else
 			S = (uint8_t)((((cMax-cMin)*HSLMAX)+((2*RGBMAX-cMax-cMin)/2))/(2*RGBMAX-cMax-cMin));
-		/* hue */
-		Rdelta = (uint16_t)((((cMax-R)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
-		Gdelta = (uint16_t)((((cMax-G)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
-		Bdelta = (uint16_t)((((cMax-B)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
+		/* hue */ /* intermediate value: % of spread from max*/
+		uint16_t Rdelta = (uint16_t)((((cMax-R)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
+		uint16_t Gdelta = (uint16_t)((((cMax-G)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
+		uint16_t Bdelta = (uint16_t)((((cMax-B)*(HSLMAX/6)) + ((cMax-cMin)/2) ) / (cMax-cMin));
 
 		if (R == cMax)
 			H = (uint8_t)(Bdelta - Gdelta);
@@ -414,7 +413,7 @@ RGBQUAD CxImage::RGBtoHSL(RGBQUAD lRGBColor)
 			H = (uint8_t)(((2*HSLMAX)/3) + Gdelta - Rdelta);
 
 //		if (H < 0) H += HSLMAX;     //always false
-		if (H > HSLMAX) H -= HSLMAX;
+//		if (H > HSLMAX) H -= HSLMAX;
 	}
 	RGBQUAD hsl={L,S,H,0};
 	return hsl;
@@ -448,15 +447,15 @@ RGBQUAD CxImage::HSLtoRGB(COLORREF cHSLColor)
 }
 ////////////////////////////////////////////////////////////////////////////////
 RGBQUAD CxImage::HSLtoRGB(RGBQUAD lHSLColor)
-{ 
+{
 	//<F. Livraghi> fixed implementation for HSL2RGB routine
 	float h,s,l;
 	float m1,m2;
-	uint8_t r,g,b;
+	BYTE r,g,b;
 
-	h = (float)lHSLColor.rgbRed * 360.0f/255.0f;
-	s = (float)lHSLColor.rgbGreen/255.0f;
-	l = (float)lHSLColor.rgbBlue/255.0f;
+	h = lHSLColor.rgbRed * 360.0f/255.0f;
+	s = lHSLColor.rgbGreen/255.0f;
+	l = lHSLColor.rgbBlue/255.0f;
 
 	if (l <= 0.5)	m2 = l * (1+s);
 	else			m2 = l + s - l*s;
@@ -464,11 +463,11 @@ RGBQUAD CxImage::HSLtoRGB(RGBQUAD lHSLColor)
 	m1 = 2 * l - m2;
 
 	if (s == 0) {
-		r=g=b=(uint8_t)(l*255.0f);
+		r=g=b=(BYTE)(l*255.0f);
 	} else {
-		r = (uint8_t)(HueToRGB(m1,m2,h+120) * 255.0f);
-		g = (uint8_t)(HueToRGB(m1,m2,h) * 255.0f);
-		b = (uint8_t)(HueToRGB(m1,m2,h-120) * 255.0f);
+		r = (BYTE)(HueToRGB(m1,m2,h+120) * 255.0f);
+		g = (BYTE)(HueToRGB(m1,m2,h) * 255.0f);
+		b = (BYTE)(HueToRGB(m1,m2,h-120) * 255.0f);
 	}
 
 	RGBQUAD rgb = {b,g,r,0};
@@ -492,7 +491,7 @@ RGBQUAD CxImage::YUVtoRGB(RGBQUAD lYUVColor)
 	R= min(255,max(0,R));
 	G= min(255,max(0,G));
 	B= min(255,max(0,B));
-	RGBQUAD rgb={(uint8_t)B,(uint8_t)G,(uint8_t)R,0};
+	RGBQUAD rgb={(BYTE)B,(BYTE)G,(BYTE)R,0};
 	return rgb;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -513,7 +512,7 @@ RGBQUAD CxImage::RGBtoYUV(RGBQUAD lRGBColor)
 	Y= min(255,max(0,Y));
 	U= min(255,max(0,U));
 	V= min(255,max(0,V));
-	RGBQUAD yuv={(uint8_t)V,(uint8_t)U,(uint8_t)Y,0};
+	RGBQUAD yuv={(BYTE)V,(BYTE)U,(BYTE)Y,0};
 	return yuv;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -531,7 +530,7 @@ RGBQUAD CxImage::YIQtoRGB(RGBQUAD lYIQColor)
 	R= min(255,max(0,R));
 	G= min(255,max(0,G));
 	B= min(255,max(0,B));
-	RGBQUAD rgb={(uint8_t)B,(uint8_t)G,(uint8_t)R,0};
+	RGBQUAD rgb={(BYTE)B,(BYTE)G,(BYTE)R,0};
 	return rgb;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -549,7 +548,7 @@ RGBQUAD CxImage::RGBtoYIQ(RGBQUAD lRGBColor)
 	Y= min(255,max(0,Y));
 	I= min(255,max(0,I));
 	Q= min(255,max(0,Q));
-	RGBQUAD yiq={(uint8_t)Q,(uint8_t)I,(uint8_t)Y,0};
+	RGBQUAD yiq={(BYTE)Q,(BYTE)I,(BYTE)Y,0};
 	return yiq;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -568,7 +567,7 @@ RGBQUAD CxImage::XYZtoRGB(RGBQUAD lXYZColor)
 	R= min(255,max(0,R));
 	G= min(255,max(0,G));
 	B= min(255,max(0,B));
-	RGBQUAD rgb={(uint8_t)B,(uint8_t)G,(uint8_t)R,0};
+	RGBQUAD rgb={(BYTE)B,(BYTE)G,(BYTE)R,0};
 	return rgb;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -586,7 +585,7 @@ RGBQUAD CxImage::RGBtoXYZ(RGBQUAD lRGBColor)
 	//X= min(255,max(0,X));
 	//Y= min(255,max(0,Y));
 	//Z= min(255,max(0,Z));
-	RGBQUAD xyz={(uint8_t)Z,(uint8_t)Y,(uint8_t)X,0};
+	RGBQUAD xyz={(BYTE)Z,(BYTE)Y,(BYTE)X,0};
 	return xyz;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -599,7 +598,7 @@ void CxImage::HuePalette(float correction)
 	if (head.biClrUsed==0) return;
 
 	for(uint32_t j=0; j<head.biClrUsed; j++){
-		uint8_t i=(uint8_t)(j*correction*(255/(head.biClrUsed-1)));
+		uint8_t i=(uint8_t)(j*correction*(255.0/(head.biClrUsed-1)));
 		RGBQUAD hsl={120,240,i,0};
 		SetPaletteColor((uint8_t)j,HSLtoRGB(hsl));
 	}
@@ -610,7 +609,7 @@ void CxImage::HuePalette(float correction)
  * \param hue: hue
  * \param sat: saturation
  * \param blend: can be from 0 (no effect) to 1 (full effect)
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Colorize(uint8_t hue, uint8_t sat, float blend)
 {
@@ -692,10 +691,10 @@ bool CxImage::Colorize(uint8_t hue, uint8_t sat, float blend)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Changes the brightness and the contrast of the image. 
+ * Changes the brightness and the contrast of the image.
  * \param brightness: can be from -255 to 255, if brightness is negative, the image becomes dark.
  * \param contrast: can be from -100 to 100, the neutral value is 0.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Light(int32_t brightness, int32_t contrast)
 {
@@ -721,7 +720,7 @@ float CxImage::Mean()
 	CxImage tmp(*this,true);
 	if (!tmp.IsValid()){
 		strcpy(info.szLastError,tmp.GetLastError());
-		return false;
+		return 0;
 	}
 
 	tmp.GrayScale();
@@ -740,12 +739,11 @@ float CxImage::Mean()
 	uint8_t *iSrc=tmp.info.pImage;
 	iSrc += tmp.info.dwEffWidth*ymin; // necessary for selections <Admir Hodzic>
 
-	for(int32_t y=ymin; y<ymax; y++){
+	for (int32_t y=ymin; y<ymax; ++y) {
 		info.nProgress = (int32_t)(100*(y-ymin)/(ymax-ymin)); //<zhanghk><Anatoly Ivasyuk>
-		for(int32_t x=xmin; x<xmax; x++){
-			sum+=iSrc[x];
-		}
-		iSrc+=tmp.info.dwEffWidth;
+		for (int32_t x = xmin; x<xmax; ++x)
+			sum += iSrc[x];
+		iSrc += tmp.info.dwEffWidth;
 	}
 	return sum/(xmax-xmin)/(ymax-ymin);
 }
@@ -761,15 +759,15 @@ float CxImage::Mean()
 	1 8 1
 	1 1 1
  the function needs: kernel={1,1,1,1,8,1,1,1,1}; Ksize=3; Kfactor=16; Koffset=0; \endverbatim
- * \return true if everything is ok
+ * \return true if everything is OK
  */
-bool CxImage::Filter(int32_t* kernel, int32_t Ksize, int32_t Kfactor, int32_t Koffset)
+bool CxImage::Filter(const int32_t* const kernel, int32_t Ksize, int32_t Kfactor, int32_t Koffset)
 {
 	if (!pDib) return false;
 
 	int32_t k2 = Ksize/2;
 	int32_t kmax= Ksize-k2;
-	int32_t r,g,b,i;
+	int32_t b, i;
 	int32_t ksumcur,ksumtot;
 	RGBQUAD c;
 
@@ -797,16 +795,15 @@ bool CxImage::Filter(int32_t* kernel, int32_t Ksize, int32_t Kfactor, int32_t Ko
 
 	if ((head.biBitCount==8) && IsGrayScale())
 	{
-		uint8_t* cPtr;
-		uint8_t* cPtr2;      
+		uint8_t* cPtr2;
 		int32_t iCount;
-		int32_t iY, iY2, iY1;
-		cPtr = info.pImage;
+		int32_t iY, iY2;
+		uint8_t *cPtr = info.pImage;
 		cPtr2 = (uint8_t *)tmp.info.pImage;
 		for(int32_t y=ymin; y<ymax; y++){
 			info.nProgress = (int32_t)(100*(y-ymin)/(ymax-ymin));
 			if (info.nEscape) break;
-			iY1 = y*info.dwEffWidth+xmin;
+			int32_t iY1 = y*info.dwEffWidth+xmin;
 			for(int32_t x=xmin; x<xmax; x++, iY1++){
 #if CXIMAGE_SUPPORT_SELECTION
 				if (BlindSelectionIsInside(x,y))
@@ -848,7 +845,8 @@ bool CxImage::Filter(int32_t* kernel, int32_t Ksize, int32_t Kfactor, int32_t Ko
 				if (BlindSelectionIsInside(x,y))
 	#endif //CXIMAGE_SUPPORT_SELECTION
 					{
-					r=b=g=ksumcur=0;
+					int32_t r = 0, g = 0;
+					b = ksumcur = 0;
 					for(int32_t j=-k2;j<kmax;j++){
 						for(int32_t k=-k2;k<kmax;k++){
 							if (!IsInside(x+j,y+k)) continue;
@@ -885,7 +883,7 @@ bool CxImage::Filter(int32_t* kernel, int32_t Ksize, int32_t Kfactor, int32_t Ko
 /**
  * Enhance the dark areas of the image
  * \param Ksize: size of the kernel.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Erode(int32_t Ksize)
 {
@@ -943,7 +941,7 @@ bool CxImage::Erode(int32_t Ksize)
 /**
  * Enhance the light areas of the image
  * \param Ksize: size of the kernel.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Dilate(int32_t Ksize)
 {
@@ -1003,7 +1001,7 @@ bool CxImage::Dilate(int32_t Ksize)
  * Similar results can be achieved using Filter(),
  * but the algorithms are different both in Edge() and in Contour().
  * \param Ksize: size of the kernel.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Edge(int32_t Ksize)
 {
@@ -1069,21 +1067,21 @@ bool CxImage::Edge(int32_t Ksize)
  * \param op: blending method; see ImageOpType
  * \param lXOffset, lYOffset: image displacement
  * \param bMixAlpha: if true and imgsrc2 has a valid alpha layer, it will be mixed in the destination image.
- * \return true if everything is ok
+ * \return true if everything is OK
  * \author [Mwolski],[brunom]
  */
-void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t lYOffset, bool bMixAlpha)
+void CxImage::Mix(const CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t lYOffset, bool bMixAlpha)
 {
     int32_t lWide = min(GetWidth(),imgsrc2.GetWidth()-lXOffset);
     int32_t lHeight = min(GetHeight(),imgsrc2.GetHeight()-lYOffset);
 
-	bool bEditAlpha = false;
-
 #if CXIMAGE_SUPPORT_ALPHA
-	bEditAlpha = imgsrc2.AlphaIsValid() & bMixAlpha;
+	bool bEditAlpha = imgsrc2.AlphaIsValid() && bMixAlpha;
 	if (bEditAlpha && AlphaIsValid()==false){
 		AlphaCreate();
 	}
+#else
+	bool bEditAlpha = false;
 #endif //CXIMAGE_SUPPORT_ALPHA
 
     RGBQUAD rgbBackgrnd1 = GetTransColor();
@@ -1105,40 +1103,40 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 				switch(op)
 				{
 					case OpAvg:
-						rgbDest.rgbBlue =  (uint8_t)((rgb1.rgbBlue+rgb2.rgbBlue)/2);
+						rgbDest.rgbBlue = (uint8_t)((rgb1.rgbBlue+rgb2.rgbBlue)/2);
 						rgbDest.rgbGreen = (uint8_t)((rgb1.rgbGreen+rgb2.rgbGreen)/2);
-						rgbDest.rgbRed =   (uint8_t)((rgb1.rgbRed+rgb2.rgbRed)/2);
+						rgbDest.rgbRed = (uint8_t)((rgb1.rgbRed+rgb2.rgbRed)/2);
 						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)((rgb1.rgbReserved+rgb2.rgbReserved)/2);
 					break;
 					case OpAdd:
-						rgbDest.rgbBlue = (uint8_t)max(0,min(255,rgb1.rgbBlue+rgb2.rgbBlue));
-						rgbDest.rgbGreen = (uint8_t)max(0,min(255,rgb1.rgbGreen+rgb2.rgbGreen));
-						rgbDest.rgbRed = (uint8_t)max(0,min(255,rgb1.rgbRed+rgb2.rgbRed));
-						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)max(0,min(255,rgb1.rgbReserved+rgb2.rgbReserved));
+						rgbDest.rgbBlue = (uint8_t)min(255,(int32_t)rgb1.rgbBlue+rgb2.rgbBlue);
+						rgbDest.rgbGreen = (uint8_t)min(255,(int32_t)rgb1.rgbGreen+rgb2.rgbGreen);
+						rgbDest.rgbRed = (uint8_t)min(255,(int32_t)rgb1.rgbRed+rgb2.rgbRed);
+						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)min(255,(int32_t)rgb1.rgbReserved+rgb2.rgbReserved);
 					break;
 					case OpSub:
-						rgbDest.rgbBlue = (uint8_t)max(0,min(255,rgb1.rgbBlue-rgb2.rgbBlue));
-						rgbDest.rgbGreen = (uint8_t)max(0,min(255,rgb1.rgbGreen-rgb2.rgbGreen));
-						rgbDest.rgbRed = (uint8_t)max(0,min(255,rgb1.rgbRed-rgb2.rgbRed));
-						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)max(0,min(255,rgb1.rgbReserved-rgb2.rgbReserved));
+						rgbDest.rgbBlue = (uint8_t)max(0,(int32_t)rgb1.rgbBlue-rgb2.rgbBlue);
+						rgbDest.rgbGreen = (uint8_t)max(0,(int32_t)rgb1.rgbGreen-rgb2.rgbGreen);
+						rgbDest.rgbRed = (uint8_t)max(0,(int32_t)rgb1.rgbRed-rgb2.rgbRed);
+						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)max(0,(int32_t)rgb1.rgbReserved-rgb2.rgbReserved);
 					break;
 					case OpAnd:
-						rgbDest.rgbBlue = (uint8_t)(rgb1.rgbBlue&rgb2.rgbBlue);
-						rgbDest.rgbGreen = (uint8_t)(rgb1.rgbGreen&rgb2.rgbGreen);
-						rgbDest.rgbRed = (uint8_t)(rgb1.rgbRed&rgb2.rgbRed);
-						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)(rgb1.rgbReserved&rgb2.rgbReserved);
+						rgbDest.rgbBlue = rgb1.rgbBlue&rgb2.rgbBlue;
+						rgbDest.rgbGreen = rgb1.rgbGreen&rgb2.rgbGreen;
+						rgbDest.rgbRed = rgb1.rgbRed&rgb2.rgbRed;
+						if (bEditAlpha) rgbDest.rgbReserved = rgb1.rgbReserved&rgb2.rgbReserved;
 					break;
 					case OpXor:
-						rgbDest.rgbBlue = (uint8_t)(rgb1.rgbBlue^rgb2.rgbBlue);
-						rgbDest.rgbGreen = (uint8_t)(rgb1.rgbGreen^rgb2.rgbGreen);
-						rgbDest.rgbRed = (uint8_t)(rgb1.rgbRed^rgb2.rgbRed);
-						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)(rgb1.rgbReserved^rgb2.rgbReserved);
+						rgbDest.rgbBlue = rgb1.rgbBlue^rgb2.rgbBlue;
+						rgbDest.rgbGreen = rgb1.rgbGreen^rgb2.rgbGreen;
+						rgbDest.rgbRed = rgb1.rgbRed^rgb2.rgbRed;
+						if (bEditAlpha) rgbDest.rgbReserved = rgb1.rgbReserved^rgb2.rgbReserved;
 					break;
 					case OpOr:
-						rgbDest.rgbBlue = (uint8_t)(rgb1.rgbBlue|rgb2.rgbBlue);
-						rgbDest.rgbGreen = (uint8_t)(rgb1.rgbGreen|rgb2.rgbGreen);
-						rgbDest.rgbRed = (uint8_t)(rgb1.rgbRed|rgb2.rgbRed);
-						if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)(rgb1.rgbReserved|rgb2.rgbReserved);
+						rgbDest.rgbBlue = rgb1.rgbBlue|rgb2.rgbBlue;
+						rgbDest.rgbGreen = rgb1.rgbGreen|rgb2.rgbGreen;
+						rgbDest.rgbRed = rgb1.rgbRed|rgb2.rgbRed;
+						if (bEditAlpha) rgbDest.rgbReserved = rgb1.rgbReserved|rgb2.rgbReserved;
 					break;
 					case OpMask:
 						if(rgb2.rgbBlue==0 && rgb2.rgbGreen==0 && rgb2.rgbRed==0)
@@ -1159,9 +1157,9 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 							rgbDest = rgb2;
 						break;
 					case OpScreen:
-						{ 
-							uint8_t a,a1; 
-							
+						{
+							uint8_t a,a1;
+
 							if (imgsrc2.IsTransparent(lX+lXOffset,lY+lYOffset)){
 								a=0;
 #if CXIMAGE_SUPPORT_ALPHA
@@ -1173,20 +1171,20 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 								a=255;
 							}
 
-							if (a==0){ //transparent 
-								rgbDest = rgb1; 
-							} else if (a==255){ //opaque 
-								rgbDest = rgb2; 
-							} else { //blend 
-								a1 = (uint8_t)~a; 
-								rgbDest.rgbBlue = (uint8_t)((rgb1.rgbBlue*a1+rgb2.rgbBlue*a)/255); 
-								rgbDest.rgbGreen = (uint8_t)((rgb1.rgbGreen*a1+rgb2.rgbGreen*a)/255); 
-								rgbDest.rgbRed = (uint8_t)((rgb1.rgbRed*a1+rgb2.rgbRed*a)/255);  
+							if (a==0){ //transparent
+								rgbDest = rgb1;
+							} else if (a==255){ //opaque
+								rgbDest = rgb2;
+							} else { //blend
+								a1 = (uint8_t)~a;
+								rgbDest.rgbBlue = (uint8_t)((rgb1.rgbBlue*a1+rgb2.rgbBlue*a)/255);
+								rgbDest.rgbGreen = (uint8_t)((rgb1.rgbGreen*a1+rgb2.rgbGreen*a)/255);
+								rgbDest.rgbRed = (uint8_t)((rgb1.rgbRed*a1+rgb2.rgbRed*a)/255);
 							}
 
 							if (bEditAlpha) rgbDest.rgbReserved = (uint8_t)((rgb1.rgbReserved*a)/255);
-						} 
-						break; 
+						}
+						break;
 					case OpSrcBlend:
 						if(IsTransparent(lX,lY))
 							rgbDest = rgb2;
@@ -1196,11 +1194,11 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 							int32_t lGDiff = abs(rgb1.rgbGreen - rgbBackgrnd1.rgbGreen);
 							int32_t lRDiff = abs(rgb1.rgbRed - rgbBackgrnd1.rgbRed);
 
-							double lAverage = (lBDiff+lGDiff+lRDiff)/3;
+							double lAverage = ((double)lBDiff+lGDiff+lRDiff)/3.0;
 							double lThresh = 16;
 							double dLarge = lAverage/lThresh;
 							double dSmall = (lThresh-lAverage)/lThresh;
-							double dSmallAmt = dSmall*((double)rgb2.rgbBlue);
+							double dSmallAmt = dSmall*rgb2.rgbBlue;
 
 							if( lAverage < lThresh+1){
 								rgbDest.rgbBlue = (uint8_t)max(0,min(255,(int32_t)(dLarge*((double)rgb1.rgbBlue) +
@@ -1222,16 +1220,16 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 							if( (rgb1.rgbReserved < 5) || (rgb2.rgbReserved > 250) ){
 								rgbDest = rgb2;
 							} else {
-								// Alpha Blending with associative calculation merge 
+								// Alpha Blending with associative calculation merge
 								// (http://en.wikipedia.org/wiki/Alpha_compositing)
 								int32_t a0,a1,a2;
 								// Transparency of the superimposed image
 								a2 = rgb2.rgbReserved;
 								// Calculation transparency of the underlying image
-								a1 = (rgb1.rgbReserved * (255 - a2)) >> 8; 
+								a1 = (rgb1.rgbReserved * (255 - a2)) >> 8;
 								// total transparency of the new pixel
 								a0 = a2 + a1;
-								// New transparency assume (a0 == 0 is the restriction s.o. (range 5-250) intercepted) 
+								// New transparency assume (a0 == 0 is the restriction s.o. (range 5-250) intercepted)
 								if (bEditAlpha) rgbDest.rgbReserved = a0;
 								// each color channel to calculate
 								rgbDest.rgbBlue		= (BYTE)((rgb2.rgbBlue	* a2	+ a1 * rgb1.rgbBlue	)/a0);
@@ -1253,7 +1251,7 @@ void CxImage::Mix(CxImage & imgsrc2, ImageOpType op, int32_t lXOffset, int32_t l
 }
 ////////////////////////////////////////////////////////////////////////////////
 // thanks to Kenneth Ballard
-void CxImage::MixFrom(CxImage & imagesrc2, int32_t lXOffset, int32_t lYOffset)
+void CxImage::MixFrom(const CxImage & imagesrc2, int32_t lXOffset, int32_t lYOffset)
 {
     int32_t width = imagesrc2.GetWidth();
     int32_t height = imagesrc2.GetHeight();
@@ -1271,7 +1269,7 @@ void CxImage::MixFrom(CxImage & imagesrc2, int32_t lXOffset, int32_t lYOffset)
 	} else { //no transparency so just set it <Matt>
 		for(x = 0; x < width; x++) {
 			for(y = 0; y < height; y++) {
-				SetPixelColor(x + lXOffset, y + lYOffset, imagesrc2.BlindGetPixelColor(x, y)); 
+				SetPixelColor(x + lXOffset, y + lYOffset, imagesrc2.BlindGetPixelColor(x, y));
 			}
 		}
 	}
@@ -1280,7 +1278,7 @@ void CxImage::MixFrom(CxImage & imagesrc2, int32_t lXOffset, int32_t lYOffset)
 /**
  * Adjusts separately the red, green, and blue values in the image.
  * \param r, g, b: can be from -255 to +255.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::ShiftRGB(int32_t r, int32_t g, int32_t b)
 {
@@ -1326,7 +1324,7 @@ bool CxImage::ShiftRGB(int32_t r, int32_t g, int32_t b)
 /**
  * Adjusts the color balance of the image
  * \param gamma can be from 0.1 to 5.
- * \return true if everything is ok
+ * \return true if everything is OK
  * \sa GammaRGB
  */
 bool CxImage::Gamma(float gamma)
@@ -1347,9 +1345,9 @@ bool CxImage::Gamma(float gamma)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Adjusts the color balance indipendent for each color channel
+ * Adjusts the color balance independent for each color channel
  * \param gammaR, gammaG, gammaB  can be from 0.1 to 5.
- * \return true if everything is ok
+ * \return true if everything is OK
  * \sa Gamma
  */
 bool CxImage::GammaRGB(float gammaR, float gammaG, float gammaB)
@@ -1392,21 +1390,20 @@ bool CxImage::GammaRGB(float gammaR, float gammaG, float gammaB)
 /**
  * Adjusts the intensity of each pixel to the median intensity of its surrounding pixels.
  * \param Ksize: size of the kernel.
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Median(int32_t Ksize)
 {
-	if (!pDib) return false;
-
-	int32_t k2 = Ksize/2;
-	int32_t kmax= Ksize-k2;
-	int32_t i,j,k;
-
+	if (!pDib)
+		return false;
 	RGBQUAD* kernel = (RGBQUAD*)malloc(Ksize*Ksize*sizeof(RGBQUAD));
+	if (!kernel)
+		return false;
 
 	CxImage tmp(*this);
-	if (!tmp.IsValid()){
-		strcpy(info.szLastError,tmp.GetLastError());
+	if (!tmp.IsValid()) {
+		strcpy(info.szLastError, tmp.GetLastError());
+		free(kernel);
 		return false;
 	}
 
@@ -1419,18 +1416,22 @@ bool CxImage::Median(int32_t Ksize)
 		xmax = head.biWidth; ymax=head.biHeight;
 	}
 
+	int32_t k2 = Ksize/2;
+	int32_t kmax = Ksize-k2;
 	for(int32_t y=ymin; y<ymax; y++){
 		info.nProgress = (int32_t)(100*(y-ymin)/(ymax-ymin));
-		if (info.nEscape) break;
+		if (info.nEscape)
+			break;
 		for(int32_t x=xmin; x<xmax; x++){
 #if CXIMAGE_SUPPORT_SELECTION
 			if (BlindSelectionIsInside(x,y))
 #endif //CXIMAGE_SUPPORT_SELECTION
-				{
-				for(j=-k2, i=0;j<kmax;j++)
-					for(k=-k2;k<kmax;k++)
-						if (IsInside(x+j,y+k))
-							kernel[i++]=BlindGetPixelColor(x+j,y+k);
+			{
+				int32_t i = 0;
+				for(int32_t j=-k2; j<kmax; ++j)
+					for(int32_t k=-k2; k<kmax; ++k)
+						if (IsInside(x+j, y+k))
+							kernel[i++]=BlindGetPixelColor(x+j, y+k);
 
 				qsort(kernel, i, sizeof(RGBQUAD), CompareColors);
 				tmp.SetPixelColor(x,y,kernel[i/2]);
@@ -1446,7 +1447,7 @@ bool CxImage::Median(int32_t Ksize)
 /**
  * Adds an uniform noise to the image
  * \param level: can be from 0 (no noise) to 255 (lot of noise).
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Noise(int32_t level)
 {
@@ -1484,7 +1485,7 @@ bool CxImage::Noise(int32_t level)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Computes the bidimensional FFT or DFT of the image.
+ * Computes the two-dimensional FFT or DFT of the image.
  * - The images are processed as grayscale
  * - If the dimensions of the image are a power of, 2 the FFT is performed automatically.
  * - If dstReal and/or dstImag are NULL, the resulting images replaces the original(s).
@@ -1496,13 +1497,14 @@ bool CxImage::Noise(int32_t level)
  * \param direction: 1 = forward, -1 = inverse.
  * \param bForceFFT: if true, the images are resampled to make the dimensions a power of 2.
  * \param bMagnitude: if true, the real part returns the magnitude, the imaginary part returns the phase
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage* dstImag,
 				   int32_t direction, bool bForceFFT, bool bMagnitude)
 {
 	//check if there is something to convert
-	if (srcReal==NULL && srcImag==NULL) return false;
+	if (srcReal==NULL && srcImag==NULL)
+		return false;
 
 	int32_t w,h;
 	//get width and height
@@ -1518,98 +1520,99 @@ bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage
 	bool bYpow2 = IsPowerof2(h);
 	//if bForceFFT, width AND height must be powers of 2
 	if (bForceFFT && !(bXpow2 && bYpow2)) {
-		int32_t i;
-		
-		i=0;
-		while((1<<i)<w) i++;
+		int32_t i=0;
+		while((1<<i)<w)
+			++i;
 		w=1<<i;
 		bXpow2=true;
 
 		i=0;
-		while((1<<i)<h) i++;
+		while((1<<i)<h)
+			++i;
 		h=1<<i;
 		bYpow2=true;
 	}
 
 	// I/O images for FFT
-	CxImage *tmpReal,*tmpImag;
+//	CxImage *tmpReal,*tmpImag;
 
 	// select output
-	tmpReal = (dstReal) ? dstReal : srcReal;
-	tmpImag = (dstImag) ? dstImag : srcImag;
+	CxImage *tmpReal = (dstReal) ? dstReal : srcReal;
+	CxImage *tmpImag = (dstImag) ? dstImag : srcImag;
 
 	// src!=dst -> copy the image
 	if (srcReal && dstReal) tmpReal->Copy(*srcReal,true,false,false);
 	if (srcImag && dstImag) tmpImag->Copy(*srcImag,true,false,false);
 
 	// dst&&src are empty -> create new one, else turn to GrayScale
-	if (srcReal==0 && dstReal==0){
+	if (srcReal==NULL && dstReal==NULL) {
 		tmpReal = new CxImage(w,h,8);
 		tmpReal->Clear(0);
 		tmpReal->SetGrayPalette();
 	} else {
-		if (!tmpReal->IsGrayScale()) tmpReal->GrayScale();
+		if (!tmpReal->IsGrayScale())
+			tmpReal->GrayScale();
 	}
-	if (srcImag==0 && dstImag==0){
+	if (srcImag==NULL && dstImag==NULL) {
 		tmpImag = new CxImage(w,h,8);
 		tmpImag->Clear(0);
 		tmpImag->SetGrayPalette();
 	} else {
-		if (!tmpImag->IsGrayScale()) tmpImag->GrayScale();
+		if (!tmpImag->IsGrayScale())
+			tmpImag->GrayScale();
 	}
 
 	if (!(tmpReal->IsValid() && tmpImag->IsValid())){
-		if (srcReal==0 && dstReal==0) delete tmpReal;
-		if (srcImag==0 && dstImag==0) delete tmpImag;
+		if (srcReal==NULL && dstReal==NULL)
+			delete tmpReal;
+		if (srcImag==NULL && dstImag==NULL)
+			delete tmpImag;
 		return false;
 	}
 
-	//resample for FFT, if necessary 
+	//resample for FFT, if necessary
 	tmpReal->Resample(w,h,0);
 	tmpImag->Resample(w,h,0);
 
-	//ok, here we have 2 (w x h), grayscale images ready for a FFT
+	//OK, here we have 2 (w x h), grayscale images ready for a FFT
 
-	double* real;
-	double* imag;
-	int32_t j,k,m;
-
-	_complex **grid;
 	//double mean = tmpReal->Mean();
 	/* Allocate memory for the grid */
-	grid = (_complex **)malloc(w * sizeof(_complex));
-	for (k=0;k<w;k++) {
+	_complex **grid = (_complex **)malloc(w * sizeof(_complex *));
+	for (int32_t k=0;k<w;k++)
 		grid[k] = (_complex *)malloc(h * sizeof(_complex));
-	}
-	for (j=0;j<h;j++) {
-		for (k=0;k<w;k++) {
+
+	for (int32_t j=0;j<h;j++) {
+		for (int32_t k=0;k<w;k++) {
 			grid[k][j].x = tmpReal->GetPixelIndex(k,j)-128;
 			grid[k][j].y = tmpImag->GetPixelIndex(k,j)-128;
 		}
 	}
 
 	//DFT buffers
-	double *real2,*imag2;
-	real2 = (double*)malloc(max(w,h) * sizeof(double));
-	imag2 = (double*)malloc(max(w,h) * sizeof(double));
+	double *real2 = (double*)malloc(max(w,h) * sizeof(double));
+	double *imag2 = (double*)malloc(max(w,h) * sizeof(double));
 
 	/* Transform the rows */
-	real = (double *)malloc(w * sizeof(double));
-	imag = (double *)malloc(w * sizeof(double));
+	double* real = (double *)malloc(w * sizeof(double));
+	double* imag = (double *)malloc(w * sizeof(double));
 
-	m=0;
-	while((1<<m)<w) m++;
+	int32_t m=0;
+	while ((1<<m)<w)
+		++m;
 
-	for (j=0;j<h;j++) {
-		for (k=0;k<w;k++) {
+	for (int32_t j=0;j<h;j++) {
+		for (int32_t k=0;k<w;k++) {
 			real[k] = grid[k][j].x;
 			imag[k] = grid[k][j].y;
 		}
 
-		if (bXpow2) FFT(direction,m,real,imag);
-		else		DFT(direction,w,real,imag,real2,imag2);
+		if (bXpow2)
+			FFT(direction,m,real,imag);
+		else
+			DFT(direction,w,real,imag,real2,imag2);
 
-		for (k=0;k<w;k++) {
+		for (int32_t k=0;k<w;k++) {
 			grid[k][j].x = real[k];
 			grid[k][j].y = imag[k];
 		}
@@ -1622,10 +1625,11 @@ bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage
 	imag = (double *)malloc(h * sizeof(double));
 
 	m=0;
-	while((1<<m)<h) m++;
+	while((1<<m)<h)
+		++m;
 
-	for (k=0;k<w;k++) {
-		for (j=0;j<h;j++) {
+	for (int32_t k=0;k<w;k++) {
+		for (int32_t j=0;j<h;j++) {
 			real[j] = grid[k][j].x;
 			imag[j] = grid[k][j].y;
 		}
@@ -1633,7 +1637,7 @@ bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage
 		if (bYpow2) FFT(direction,m,real,imag);
 		else		DFT(direction,h,real,imag,real2,imag2);
 
-		for (j=0;j<h;j++) {
+		for (int32_t j=0;j<h;j++) {
 			grid[k][j].x = real[j];
 			grid[k][j].y = imag[j];
 		}
@@ -1652,8 +1656,8 @@ bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage
 	//bMagnitude : just to see it on the screen
 	if (bMagnitude) nn*=4;
 
-	for (j=0;j<h;j++) {
-		for (k=0;k<w;k++) {
+	for (int32_t j=0;j<h;j++) {
+		for (int32_t k=0;k<w;k++) {
 			if (bMagnitude){
 				tmpReal->SetPixelIndex(k,j,(uint8_t)max(0,min(255,(nn*(3+log(_cabs(grid[k][j])))))));
 				if (grid[k][j].x==0){
@@ -1668,11 +1672,14 @@ bool CxImage::FFT2(CxImage* srcReal, CxImage* srcImag, CxImage* dstReal, CxImage
 		}
 	}
 
-	for (k=0;k<w;k++) free (grid[k]);
-	free (grid);
+	for (int32_t k=0; k<w; k++)
+		free(grid[k]);
+	free(grid);
 
-	if (srcReal==0 && dstReal==0) delete tmpReal;
-	if (srcImag==0 && dstImag==0) delete tmpImag;
+	if (srcReal==NULL && dstReal==NULL)
+		delete tmpReal;
+	if (srcImag==NULL && dstImag==NULL)
+		delete tmpImag;
 
 	return true;
 }
@@ -1686,18 +1693,18 @@ bool CxImage::IsPowerof2(int32_t x)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
-   This computes an in-place complex-to-complex FFT 
+   This computes an in-place complex-to-complex FFT
    x and y are the real and imaginary arrays of n=2^m points.
    o(n)=n*log2(n)
    dir =  1 gives forward transform
-   dir = -1 gives reverse transform 
+   dir = -1 gives reverse transform
    Written by Paul Bourke, July 1998
-   FFT algorithm by Cooley and Tukey, 1965 
+   FFT algorithm by Cooley and Tukey, 1965
 */
 bool CxImage::FFT(int32_t dir,int32_t m,double *x,double *y)
 {
-	int32_t nn,i,i1,j,k,i2,l,l1,l2;
-	double c1,c2,tx,ty,t1,t2,u1,u2,z;
+	int32_t nn, i, i1, j, i2, l, l2;
+	double c1, c2, tx, ty, t1, t2, z;
 
 	/* Calculate the number of points */
 	nn = 1<<m;
@@ -1714,7 +1721,7 @@ bool CxImage::FFT(int32_t dir,int32_t m,double *x,double *y)
 			x[j] = tx;
 			y[j] = ty;
 		}
-		k = i2;
+		int32_t k = i2;
 		while (k <= j) {
 			j -= k;
 			k >>= 1;
@@ -1727,10 +1734,10 @@ bool CxImage::FFT(int32_t dir,int32_t m,double *x,double *y)
 	c2 = 0.0;
 	l2 = 1;
 	for (l=0;l<m;l++) {
-		l1 = l2;
+		int32_t l1 = l2;
 		l2 <<= 1;
-		u1 = 1.0;
-		u2 = 0.0;
+		double u1 = 1.0;
+		double u2 = 0.0;
 		for (j=0;j<l1;j++) {
 			for (i=j;i<nn;i+=l2) {
 				i1 = i + l1;
@@ -1763,19 +1770,18 @@ bool CxImage::FFT(int32_t dir,int32_t m,double *x,double *y)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
-   Direct fourier transform o(n)=n^2
-   Written by Paul Bourke, July 1998 
+   Direct Fourier transform o(n)=n^2
+   Written by Paul Bourke, July 1998
 */
 bool CxImage::DFT(int32_t dir,int32_t m,double *x1,double *y1,double *x2,double *y2)
 {
    int32_t i,k;
-   double arg;
    double cosarg,sinarg;
-   
+
    for (i=0;i<m;i++) {
       x2[i] = 0;
       y2[i] = 0;
-      arg = - dir * 2.0 * PI * i / (double)m;
+	  double arg = -dir * 2.0 * PI * i / (double)m;
       for (k=0;k<m;k++) {
          cosarg = cos(k * arg);
          sinarg = sin(k * arg);
@@ -1783,7 +1789,7 @@ bool CxImage::DFT(int32_t dir,int32_t m,double *x1,double *y1,double *x2,double 
          y2[i] += (x1[k] * sinarg + y1[k] * cosarg);
       }
    }
-   
+
    /* Copy the data back */
    if (dir == 1) {
       for (i=0;i<m;i++) {
@@ -1796,7 +1802,7 @@ bool CxImage::DFT(int32_t dir,int32_t m,double *x1,double *y1,double *x2,double 
          y1[i] = y2[i];
       }
    }
-   
+
    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1804,8 +1810,8 @@ bool CxImage::DFT(int32_t dir,int32_t m,double *x1,double *y1,double *x2,double 
  * Combines different color components into a single image
  * \param r,g,b: color channels
  * \param a: alpha layer, can be NULL
- * \param colorspace: 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ 
- * \return true if everything is ok
+ * \param colorspace: 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ
+ * \return true if everything is OK
  */
 bool CxImage::Combine(CxImage* r,CxImage* g,CxImage* b,CxImage* a, int32_t colorspace)
 {
@@ -1826,7 +1832,7 @@ bool CxImage::Combine(CxImage* r,CxImage* g,CxImage* b,CxImage* a, int32_t color
 #endif //CXIMAGE_SUPPORT_ALPHA
 	}
 
-	RGBQUAD c;
+	RGBQUAD c = {0, 0, 0, 0};
 	for (int32_t y=0;y<h;y++){
 		info.nProgress = (int32_t)(100*y/h); //<Anatoly Ivasyuk>
 		for (int32_t x=0;x<w;x++){
@@ -1862,8 +1868,8 @@ bool CxImage::Combine(CxImage* r,CxImage* g,CxImage* b,CxImage* a, int32_t color
  * Smart blurring to remove small defects, dithering or artifacts.
  * \param radius: normally between 0.01 and 0.5
  * \param niterations: should be trimmed with radius, to avoid blurring should be (radius*niterations)<1
- * \param colorspace: 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ 
- * \return true if everything is ok
+ * \param colorspace: 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ
+ * \return true if everything is OK
  */
 bool CxImage::Repair(float radius, int32_t niterations, int32_t colorspace)
 {
@@ -1894,7 +1900,7 @@ bool CxImage::Repair(float radius, int32_t niterations, int32_t colorspace)
 	default:
 		SplitRGB(&r,&g,&b);
 	}
-	
+
 	for (int32_t i=0; i<niterations; i++){
 		RepairChannel(&r,radius);
 		RepairChannel(&g,radius);
@@ -2003,7 +2009,7 @@ bool CxImage::RepairChannel(CxImage *ch, float radius)
  * Enhance the variations between adjacent pixels.
  * Similar results can be achieved using Filter(),
  * but the algorithms are different both in Edge() and in Contour().
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Contour()
 {
@@ -2012,7 +2018,7 @@ bool CxImage::Contour()
 	int32_t Ksize = 3;
 	int32_t k2 = Ksize/2;
 	int32_t kmax= Ksize-k2;
-	int32_t i,j,k;
+	int32_t j, k;
 	uint8_t maxr,maxg,maxb;
 	RGBQUAD pix1,pix2;
 
@@ -2041,8 +2047,8 @@ bool CxImage::Contour()
 				{
 				pix1 = BlindGetPixelColor(x,y);
 				maxr=maxg=maxb=0;
-				for(j=-k2, i=0;j<kmax;j++){
-					for(k=-k2;k<kmax;k++, i++){
+				for(j=-k2; j<kmax; ++j) {
+					for(k=-k2; k<kmax; ++k) {
 						if (!IsInside(x+j,y+k)) continue;
 						pix2 = BlindGetPixelColor(x+j,y+k);
 						if ((pix2.rgbBlue-pix1.rgbBlue)>maxb) maxb = pix2.rgbBlue;
@@ -2064,7 +2070,7 @@ bool CxImage::Contour()
 /**
  * Adds a random offset to each pixel in the image
  * \param radius: maximum pixel displacement
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Jitter(int32_t radius)
 {
@@ -2116,23 +2122,22 @@ bool CxImage::Jitter(int32_t radius)
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/** 
- * generates a 1-D convolution matrix to be used for each pass of 
- * a two-pass gaussian blur.  Returns the length of the matrix.
+/**
+ * generates a 1-D convolution matrix to be used for each pass of
+ * a two-pass Gaussian blur.  Returns the length of the matrix.
  * \author [nipper]
  */
 int32_t CxImage::gen_convolve_matrix (float radius, float **cmatrix_p)
 {
 	int32_t matrix_length;
-	int32_t matrix_midpoint;
 	float* cmatrix;
 	int32_t i,j;
 	float std_dev;
 	float sum;
-	
+
 	/* we want to generate a matrix that goes out a certain radius
 	* from the center, so we have to go out ceil(rad-0.5) pixels,
-	* inlcuding the center pixel.  Of course, that's only in one direction,
+	* including the center pixel.  Of course, that's only in one direction,
 	* so we have to go the same amount in the other direction, but not count
 	* the center pixel again.  So we double the previous result and subtract
 	* one.
@@ -2142,43 +2147,42 @@ int32_t CxImage::gen_convolve_matrix (float radius, float **cmatrix_p)
 	* <DP> modified scaling, so that matrix_lenght = 1+2*radius parameter
 	*/
 	radius = (float)fabs(0.5*radius) + 0.25f;
-	
+
 	std_dev = radius;
 	radius = std_dev * 2;
-	
+
 	/* go out 'radius' in each direction */
 	matrix_length = int32_t (2 * ceil(radius-0.5) + 1);
 	if (matrix_length <= 0) matrix_length = 1;
-	matrix_midpoint = matrix_length/2 + 1;
 	*cmatrix_p = new float[matrix_length];
 	cmatrix = *cmatrix_p;
-	
+
 	/*  Now we fill the matrix by doing a numeric integration approximation
 	* from -2*std_dev to 2*std_dev, sampling 50 points per pixel.
 	* We do the bottom half, mirror it to the top half, then compute the
 	* center point.  Otherwise asymmetric quantization errors will occur.
 	*  The formula to integrate is e^-(x^2/2s^2).
 	*/
-	
+
 	/* first we do the top (right) half of matrix */
 	for (i = matrix_length/2 + 1; i < matrix_length; i++)
     {
-		float base_x = i - (float)floor((float)(matrix_length/2)) - 0.5f;
+		float base_x = (float)(i - floor(matrix_length/2.0) - 0.5);
 		sum = 0;
 		for (j = 1; j <= 50; j++)
 		{
-			if ( base_x+0.02*j <= radius ) 
-				sum += (float)exp (-(base_x+0.02*j)*(base_x+0.02*j) / 
+			if ( base_x+0.02*j <= radius )
+				sum += (float)exp (-(base_x+0.02*j)*(base_x+0.02*j) /
 				(2*std_dev*std_dev));
 		}
 		cmatrix[i] = sum/50;
     }
-	
+
 	/* mirror the thing to the bottom half */
 	for (i=0; i<=matrix_length/2; i++) {
 		cmatrix[i] = cmatrix[matrix_length-1-i];
 	}
-	
+
 	/* find center val -- calculate an odd number of quanta to make it symmetric,
 	* even if the center point is weighted slightly higher than others. */
 	sum = 0;
@@ -2188,12 +2192,12 @@ int32_t CxImage::gen_convolve_matrix (float radius, float **cmatrix_p)
 			(2*std_dev*std_dev));
     }
 	cmatrix[matrix_length/2] = sum/51;
-	
+
 	/* normalize the distribution by scaling the total sum to one */
 	sum=0;
 	for (i=0; i<matrix_length; i++) sum += cmatrix[i];
 	for (i=0; i<matrix_length; i++) cmatrix[i] = cmatrix[i] / sum;
-	
+
 	return matrix_length;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2209,7 +2213,7 @@ float* CxImage::gen_lookup_table (float *cmatrix, int32_t cmatrix_length)
 	float* lookup_table = new float[cmatrix_length * 256];
 	float* lookup_table_p = lookup_table;
 	float* cmatrix_p      = cmatrix;
-	
+
 	for (int32_t i=0; i<cmatrix_length; i++)
     {
 		for (int32_t j=0; j<256; j++)
@@ -2218,7 +2222,7 @@ float* CxImage::gen_lookup_table (float *cmatrix, int32_t cmatrix_length)
 		}
 		cmatrix_p++;
     }
-	
+
 	return lookup_table;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2228,20 +2232,13 @@ float* CxImage::gen_lookup_table (float *cmatrix, int32_t cmatrix_length)
  * in the processing of the lines, at least to the blur_line function.
  * \author [nipper]
  */
-void CxImage::blur_line (float *ctable, float *cmatrix, int32_t cmatrix_length, uint8_t* cur_col, uint8_t* dest_col, int32_t y, int32_t bytes)
+void CxImage::blur_line (float *ctable, const float* const cmatrix, int32_t cmatrix_length, uint8_t* cur_col, uint8_t* dest_col, int32_t y, int32_t bytes)
 {
 	float scale;
 	float sum;
-	int32_t i=0, j=0;
 	int32_t row;
 	int32_t cmatrix_middle = cmatrix_length/2;
-	
-	float *cmatrix_p;
-	uint8_t  *cur_col_p;
-	uint8_t  *cur_col_p1;
-	uint8_t  *dest_col_p;
-	float *ctable_p;
-	
+
 	/* this first block is the same as the non-optimized version --
 	* it is only used for very small pictures, so speed isn't a
 	* big concern.
@@ -2252,17 +2249,17 @@ void CxImage::blur_line (float *ctable, float *cmatrix, int32_t cmatrix_length, 
 		{
 			scale=0;
 			/* find the scale factor */
-			for (j = 0; j < y ; j++)
+			for (int32_t j = 0; j < y ; j++)
 			{
 				/* if the index is in bounds, add it to the scale counter */
 				if ((j + cmatrix_middle - row >= 0) &&
 					(j + cmatrix_middle - row < cmatrix_length))
 					scale += cmatrix[j + cmatrix_middle - row];
 			}
-			for (i = 0; i<bytes; i++)
+			for (int32_t i = 0; i<bytes; i++)
 			{
 				sum = 0;
-				for (j = 0; j < y; j++)
+				for (int32_t j = 0; j < y; j++)
 				{
 					if ((j >= row - cmatrix_middle) &&
 						(j <= row + cmatrix_middle))
@@ -2279,12 +2276,12 @@ void CxImage::blur_line (float *ctable, float *cmatrix, int32_t cmatrix_length, 
 		{
 			/* find scale factor */
 			scale=0;
-			for (j = cmatrix_middle - row; j<cmatrix_length; j++)
+			for (int32_t j = cmatrix_middle - row; j<cmatrix_length; j++)
 				scale += cmatrix[j];
-			for (i = 0; i<bytes; i++)
+			for (int32_t i = 0; i<bytes; i++)
 			{
 				sum = 0;
-				for (j = cmatrix_middle - row; j<cmatrix_length; j++)
+				for (int32_t j = cmatrix_middle - row; j<cmatrix_length; j++)
 				{
 					sum += cur_col[(row + j-cmatrix_middle)*bytes + i] * cmatrix[j];
 				}
@@ -2292,17 +2289,16 @@ void CxImage::blur_line (float *ctable, float *cmatrix, int32_t cmatrix_length, 
 			}
 		}
 		/* go through each pixel in each col */
-		dest_col_p = dest_col + row*bytes;
+		uint8_t *dest_col_p = dest_col + row*bytes;
 		for (; row < y-cmatrix_middle; row++)
 		{
-			cur_col_p = (row - cmatrix_middle) * bytes + cur_col;
-			for (i = 0; i<bytes; i++)
+			uint8_t *cur_col_p = (row - cmatrix_middle) * bytes + cur_col;
+			for (int32_t i = 0; i<bytes; i++)
 			{
 				sum = 0;
-				cmatrix_p = cmatrix;
-				cur_col_p1 = cur_col_p;
-				ctable_p = ctable;
-				for (j = cmatrix_length; j>0; j--)
+				uint8_t *cur_col_p1 = cur_col_p;
+				float *ctable_p = ctable;
+				for (int32_t j = cmatrix_length; j>0; j--)
 				{
 					sum += *(ctable_p + *cur_col_p1);
 					cur_col_p1 += bytes;
@@ -2312,18 +2308,18 @@ void CxImage::blur_line (float *ctable, float *cmatrix, int32_t cmatrix_length, 
 				*(dest_col_p++) = (uint8_t)(0.5f + sum);
 			}
 		}
-		
+
 		/* for the edge condition , we only use available info, and scale to one */
 		for (; row < y; row++)
 		{
 			/* find scale factor */
 			scale=0;
-			for (j = 0; j< y-row + cmatrix_middle; j++)
+			for (int32_t j = 0; j< y-row + cmatrix_middle; j++)
 				scale += cmatrix[j];
-			for (i = 0; i<bytes; i++)
+			for (int32_t i = 0; i<bytes; i++)
 			{
 				sum = 0;
-				for (j = 0; j<y-row + cmatrix_middle; j++)
+				for (int32_t j = 0; j<y-row + cmatrix_middle; j++)
 				{
 					sum += cur_col[(row + j-cmatrix_middle)*bytes + i] * cmatrix[j];
 				}
@@ -2455,13 +2451,16 @@ bool CxImage::TextBlur(uint8_t threshold, uint8_t decay, uint8_t max_depth, bool
 	if (!(head.biBitCount == 24 || IsGrayScale())){
 		pPalette = new RGBQUAD[head.biClrUsed];
 		memcpy(pPalette, GetPalette(),GetPaletteSize());
-		if (!IncreaseBpp(24))
+		if (!IncreaseBpp(24)) {
+			delete[] pPalette;
 			return false;
+		}
 	}
 
 	CxImage tmp(*this);
 	if (!tmp.IsValid()){
 		strcpy(info.szLastError,tmp.GetLastError());
+		delete[] pPalette;
 		return false;
 	}
 
@@ -2515,13 +2514,16 @@ bool CxImage::GaussianBlur(float radius /*= 1.0f*/, CxImage* iDst /*= 0*/)
 	if (!(head.biBitCount == 24 || IsGrayScale())){
 		pPalette = new RGBQUAD[head.biClrUsed];
 		memcpy(pPalette, GetPalette(),GetPaletteSize());
-		if (!IncreaseBpp(24))
+		if (!IncreaseBpp(24)) {
+			delete[] pPalette;
 			return false;
+		}
 	}
 
 	CxImage tmp_x(*this, false, true, true);
 	if (!tmp_x.IsValid()){
 		strcpy(info.szLastError,tmp_x.GetLastError());
+		delete[] pPalette;
 		return false;
 	}
 
@@ -2540,7 +2542,7 @@ bool CxImage::GaussianBlur(float radius /*= 1.0f*/, CxImage* iDst /*= 0*/)
 	double dbScaler = 50.0f/head.biHeight;
 
 	// blur the rows
-    for (y=0;y<head.biHeight;y++)
+	for (y=0;y<head.biHeight;y++)
 	{
 		if (info.nEscape) break;
 		info.nProgress = (int32_t)(y*dbScaler);
@@ -2551,14 +2553,15 @@ bool CxImage::GaussianBlur(float radius /*= 1.0f*/, CxImage* iDst /*= 0*/)
 	CxImage tmp_y(tmp_x, false, true, true);
 	if (!tmp_y.IsValid()){
 		strcpy(info.szLastError,tmp_y.GetLastError());
+		delete[] pPalette;
 		return false;
 	}
 
 	CImageIterator itDst(&tmp_y);
 
 	// blur the cols
-    uint8_t* cur_col = (uint8_t*)malloc(bypp*head.biHeight);
-    uint8_t* dest_col = (uint8_t*)malloc(bypp*head.biHeight);
+	uint8_t* cur_col = (uint8_t*)malloc(bypp*head.biHeight);
+	uint8_t* dest_col = (uint8_t*)malloc(bypp*head.biHeight);
 
 	dbScaler = 50.0f/head.biWidth;
 
@@ -2639,8 +2642,6 @@ bool CxImage::SelectiveBlur(float radius, uint8_t threshold, CxImage* iDst)
 	}
 
 	//build the difference mask
-	uint8_t thresh_dw = (uint8_t)max( 0 ,(int32_t)(128 - threshold));
-	uint8_t thresh_up = (uint8_t)min(255,(int32_t)(128 + threshold));
 	int32_t kernel[]={-100,-100,-100,-100,801,-100,-100,-100,-100};
 	if (!Tmp.Filter(kernel,3,800,128)){
 		strcpy(info.szLastError,Tmp.GetLastError());
@@ -2661,6 +2662,8 @@ bool CxImage::SelectiveBlur(float radius, uint8_t threshold, CxImage* iDst)
 	ymin = Tmp.info.rSelectionBox.bottom;
 	ymax = Tmp.info.rSelectionBox.top;
 
+	uint8_t thresh_dw = (uint8_t)max(0, (int32_t)(128 - threshold));
+	uint8_t thresh_up = (uint8_t)min(255, (int32_t)(128 + threshold));
 	//modify the selection where the difference mask is over the threshold
 	for(int32_t y=ymin; y<ymax; y++){
 		info.nProgress = (int32_t)(100*(y-ymin)/(ymax-ymin));
@@ -2708,7 +2711,7 @@ bool CxImage::SelectiveBlur(float radius, uint8_t threshold, CxImage* iDst)
  * \param amount: strength of the filter. Range: 0.0 (none) to 1.0 (max); default = 0.5
  * \param threshold: difference, between blurred and original pixel, to trigger the filter
  *                   Range: 0 (always triggered) to 255 (never triggered); default = 0.
- * \return true if everything is ok
+ * \return true if everything is OK
  * \author [nipper]; changes [DP]
  */
 bool CxImage::UnsharpMask(float radius /*= 5.0*/, float amount /*= 0.5*/, int32_t threshold /*= 0*/)
@@ -2722,13 +2725,18 @@ bool CxImage::UnsharpMask(float radius /*= 5.0*/, float amount /*= 0.5*/, int32_
 	if (!(head.biBitCount == 24 || IsGrayScale())){
 		pPalette = new RGBQUAD[head.biClrUsed];
 		memcpy(pPalette, GetPalette(),GetPaletteSize());
-		if (!IncreaseBpp(24))
+		if (!IncreaseBpp(24)) {
+			delete[] pPalette;
 			return false;
+		}
 	}
 
 	CxImage iDst;
-	if (!GaussianBlur(radius,&iDst))
+	if (!GaussianBlur(radius,&iDst)) {
+		iDst.DecreaseBpp(bpp, false, pPalette);
+		delete[] pPalette;
 		return false;
+	}
 
 	CImageIterator itSrc(this);
 	CImageIterator itDst(&iDst);
@@ -2747,7 +2755,7 @@ bool CxImage::UnsharpMask(float radius /*= 5.0*/, float amount /*= 0.5*/, int32_
 
 	double dbScaler = 100.0/(ymax-ymin);
 	int32_t bypp = head.biBitCount>>3;
-	
+
 	// merge the source and destination (which currently contains
 	// the blurred version) images
     for (int32_t y=ymin; y<ymax; y++)
@@ -2768,7 +2776,7 @@ bool CxImage::UnsharpMask(float radius /*= 5.0*/, float amount /*= 0.5*/, int32_
 				for (int32_t b=0, z=x*bypp; b<bypp; b++, z++){
 					int32_t diff = cur_row[z] - dest_row[z];
 
-					// do tresholding
+					// do thresholding
 					if (abs(diff) < threshold){
 						dest_row[z] = cur_row[z];
 					} else {
@@ -2791,16 +2799,15 @@ bool CxImage::UnsharpMask(float radius /*= 5.0*/, float amount /*= 0.5*/, int32_
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Apply a look up table to the image. 
+ * Apply a look up table to the image.
  * \param pLut: uint8_t[256] look up table
- * \return true if everything is ok
+ * \return true if everything is OK
  */
-bool CxImage::Lut(uint8_t* pLut)
+bool CxImage::Lut(const uint8_t* const pLut)
 {
 	if (!pDib || !pLut) return false;
 	RGBQUAD color;
 
-	double dbScaler;
 	if (head.biClrUsed==0){
 
 		int32_t xmin,xmax,ymin,ymax;
@@ -2811,7 +2818,8 @@ bool CxImage::Lut(uint8_t* pLut)
 			// faster loop for full image
 			uint8_t *iSrc=info.pImage;
 			for(uint32_t i=0; i < head.biSizeImage ; i++){
-				*iSrc++ = pLut[*iSrc];
+				*iSrc = pLut[*iSrc];
+				++iSrc;
 			}
 			return true;
 		}
@@ -2819,7 +2827,7 @@ bool CxImage::Lut(uint8_t* pLut)
 		if (xmin==xmax || ymin==ymax)
 			return false;
 
-		dbScaler = 100.0/(ymax-ymin);
+		double dbScaler = 100.0/(ymax-ymin);
 
 		for(int32_t y=ymin; y<ymax; y++){
 			info.nProgress = (int32_t)((y-ymin)*dbScaler); //<Anatoly Ivasyuk>
@@ -2838,14 +2846,15 @@ bool CxImage::Lut(uint8_t* pLut)
 		}
 #if CXIMAGE_SUPPORT_SELECTION
 	} else if (pSelection && (head.biBitCount==8) && IsGrayScale()){
-		int32_t xmin,xmax,ymin,ymax;
-		xmin = info.rSelectionBox.left; xmax = info.rSelectionBox.right;
-		ymin = info.rSelectionBox.bottom; ymax = info.rSelectionBox.top;
+		int32_t xmin = info.rSelectionBox.left;
+		int32_t xmax = info.rSelectionBox.right;
+		int32_t ymin = info.rSelectionBox.bottom;
+		int32_t ymax = info.rSelectionBox.top;
 
 		if (xmin==xmax || ymin==ymax)
 			return false;
 
-		dbScaler = 100.0/(ymax-ymin);
+		double dbScaler = 100.0/(ymax-ymin);
 		for(int32_t y=ymin; y<ymax; y++){
 			info.nProgress = (int32_t)((y-ymin)*dbScaler);
 			for(int32_t x=xmin; x<xmax; x++){
@@ -2872,16 +2881,15 @@ bool CxImage::Lut(uint8_t* pLut)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Apply an indipendent look up table for each channel
+ * Apply an independent look up table for each channel
  * \param pLutR, pLutG, pLutB, pLutA: uint8_t[256] look up tables
- * \return true if everything is ok
+ * \return true if everything is OK
  */
-bool CxImage::Lut(uint8_t* pLutR, uint8_t* pLutG, uint8_t* pLutB, uint8_t* pLutA)
+bool CxImage::Lut(const uint8_t* const pLutR, const uint8_t* const pLutG, const uint8_t* const pLutB, const uint8_t* const pLutA)
 {
 	if (!pDib || !pLutR || !pLutG || !pLutB) return false;
 	RGBQUAD color;
 
-	double dbScaler;
 	if (head.biClrUsed==0){
 
 		int32_t xmin,xmax,ymin,ymax;
@@ -2896,7 +2904,7 @@ bool CxImage::Lut(uint8_t* pLutR, uint8_t* pLutG, uint8_t* pLutB, uint8_t* pLutA
 		if (xmin==xmax || ymin==ymax)
 			return false;
 
-		dbScaler = 100.0/(ymax-ymin);
+		double dbScaler = 100.0/(ymax-ymin);
 
 		for(int32_t y=ymin; y<ymax; y++){
 			info.nProgress = (int32_t)((y-ymin)*dbScaler);
@@ -2932,13 +2940,14 @@ bool CxImage::Lut(uint8_t* pLutR, uint8_t* pLutG, uint8_t* pLutB, uint8_t* pLutA
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Use the RedEyeRemove function to remove the red-eye effect that frequently
- * occurs in photographs of humans and animals. You must select the region 
+ * occurs in photographs of humans and animals. You must select the region
  * where the function will filter the red channel.
  * \param strength: range from 0.0f (no effect) to 1.0f (full effect). Default = 0.8
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::RedEyeRemove(float strength)
 {
+	UNREFERENCED_PARAMETER(strength);
 	if (!pDib) return false;
 	RGBQUAD color;
 
@@ -2954,8 +2963,7 @@ bool CxImage::RedEyeRemove(float strength)
 	if (xmin==xmax || ymin==ymax)
 		return false;
 
-	if (strength<0.0f) strength = 0.0f;
-	if (strength>1.0f) strength = 1.0f;
+	//else if (strength>1.0f) strength = 1.0f;
 
 	for(int32_t y=ymin; y<ymax; y++){
 		info.nProgress = (int32_t)(100*(y-ymin)/(ymax-ymin));
@@ -2977,10 +2985,10 @@ bool CxImage::RedEyeRemove(float strength)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Changes the saturation of the image. 
+ * Changes the saturation of the image.
  * \param saturation: can be from -100 to 100, positive values increase the saturation.
  * \param colorspace: can be 1 (HSL) or 2 (YUV).
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::Saturate(const int32_t saturation, const int32_t colorspace)
 {
@@ -3061,7 +3069,7 @@ bool CxImage::Saturate(const int32_t saturation, const int32_t colorspace)
  * \param  level : lightness threshold. Range = 0 to 255; default = 128.
  * \param  bLinkedChannels: true = compare with luminance, preserve colors (default)
  *                         false = compare with independent R,G,B levels
- * \return true if everything is ok
+ * \return true if everything is OK
  * \author [Priyank Bolia] (priyank_bolia(at)yahoo(dot)com); changes [DP]
  */
 bool CxImage::Solarize(uint8_t level, bool bLinkedChannels)
@@ -3142,7 +3150,7 @@ bool CxImage::Solarize(uint8_t level, bool bLinkedChannels)
 				info.nBkgndColor.rgbBlue = (uint8_t)(255-info.nBkgndColor.rgbBlue);
 				info.nBkgndColor.rgbGreen = (uint8_t)(255-info.nBkgndColor.rgbGreen);
 				info.nBkgndColor.rgbRed = (uint8_t)(255-info.nBkgndColor.rgbRed);
-			} 
+			}
 		} else {
 			if (info.nBkgndColor.rgbBlue>level)	 info.nBkgndColor.rgbBlue = (uint8_t)(255-info.nBkgndColor.rgbBlue);
 			if (info.nBkgndColor.rgbGreen>level) info.nBkgndColor.rgbGreen = (uint8_t)(255-info.nBkgndColor.rgbGreen);
@@ -3156,9 +3164,9 @@ bool CxImage::Solarize(uint8_t level, bool bLinkedChannels)
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Converts the RGB triplets to and from different colorspace
- * \param dstColorSpace: destination colorspace; 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ 
- * \param srcColorSpace: source colorspace; 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ 
- * \return true if everything is ok
+ * \param dstColorSpace: destination colorspace; 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ
+ * \param srcColorSpace: source colorspace; 0 = RGB, 1 = HSL, 2 = YUV, 3 = YIQ, 4 = XYZ
+ * \return true if everything is OK
  */
 bool CxImage::ConvertColorSpace(const int32_t dstColorSpace, const int32_t srcColorSpace)
 {
@@ -3221,7 +3229,7 @@ bool CxImage::ConvertColorSpace(const int32_t dstColorSpace, const int32_t srcCo
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Finds the optimal (global or local) treshold for image binarization
+ * Finds the optimal (global or local) threshold for image binarization
  * \param method: 0 = average all methods (default); 1 = Otsu; 2 = Kittler & Illingworth; 3 = max entropy; 4 = potential difference;
  * \param pBox: region from where the threshold is computed; 0 = full image (default).
  * \param pContrastMask: limit the computation only in regions with contrasted (!=0) pixels; default = 0.
@@ -3239,7 +3247,7 @@ bool CxImage::ConvertColorSpace(const int32_t dstColorSpace, const int32_t srcCo
 int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContrastMask)
 {
 	if (!pDib)
-		return false;
+		return 0;
 
 	if (head.biBitCount!=8){
 		strcpy(info.szLastError,"OptimalThreshold works only on 8 bit images");
@@ -3266,12 +3274,11 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
 		xmin = ymin = 0;
 		xmax = head.biWidth; ymax=head.biHeight;
 	}
-	
+
 	if (xmin>=xmax || ymin>=ymax)
 		return -1;
 
-	double p[256];
-	memset(p,  0, 256*sizeof(double));
+	double p[256] = {};
 	//build histogram
 	for (int32_t y = ymin; y<ymax; y++){
 		uint8_t* pGray = GetBits(y) + xmin;
@@ -3310,28 +3317,27 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
 	for (i = gray_min; i <= gray_max; i++){
 		w_tot += p[i];
 		m_tot += i*p[i];
-		q_tot += i*i*p[i];
+		q_tot += i*((double)i)*p[i];
 	}
 
-	double L, L1max, L2max, L3max, L4max; //objective functions
+	double L1max, L2max, L3max, L4max; //objective functions
 	int32_t th1,th2,th3,th4; //optimal thresholds
 	L1max = L2max = L3max = L4max = 0;
 	th1 = th2 = th3 = th4 = -1;
 
-	double w1, w2, m1, m2, q1, q2, s1, s2;
-	w1 = m1 = q1 = 0;
+	double w1=0, m1=0, q1=0;
 	for (i = gray_min; i < gray_max; i++){
 		w1 += p[i];
-		w2 = w_tot - w1;
+		double w2 = w_tot - w1;
 		m1 += i*p[i];
-		m2 = m_tot - m1;
-		q1 += i*i*p[i];
-		q2 = q_tot - q1;
-		s1 = q1/w1-m1*m1/w1/w1; //s1 = q1/w1-pow(m1/w1,2);
-		s2 = q2/w2-m2*m2/w2/w2; //s2 = q2/w2-pow(m2/w2,2);
+		double m2 = m_tot - m1;
+		q1 += i*((double)i)*p[i];
+		double q2 = q_tot - q1;
+		double s1 = q1/w1-m1*m1/w1/w1; //s1 = q1/w1-pow(m1/w1,2);
+		double s2 = q2/w2-m2*m2/w2/w2; //s2 = q2/w2-pow(m2/w2,2);
 
 		//Otsu
-		L = -(s1*w1 + s2*w2); //implemented as definition
+		double L = -(s1*w1 + s2*w2); //implemented as definition
 		//L = w1 * w2 * (m2/w2 - m1/w1)*(m2/w2 - m1/w1); //implementation that doesn't need s1 & s2
 		if (L1max < L || th1<0){
 			L1max = L;
@@ -3351,7 +3357,7 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
 		//max entropy
 		L = 0;
 		for (k=gray_min;k<=i;k++) if (p[k] > 0)	L -= p[k]*log(p[k]/w1)/w1;
-		for (k;k<=gray_max;k++) if (p[k] > 0)	L -= p[k]*log(p[k]/w2)/w2;
+		for (;k<=gray_max; ++k) if (p[k] > 0)	L -= p[k]*log(p[k]/w2)/w2;
 		if (L3max < L || th3<0){
 			L3max = L;
 			th3 = i;
@@ -3364,7 +3370,7 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
 		for (k=gray_min;k<=i;k++)
 			vdiff += p[k]*(i-k)*(i-k);
 		double vsum = vdiff;
-		for (k;k<=gray_max;k++){
+		for (;k<=gray_max; ++k) {
 			double dv = p[k]*(k-i)*(k-i);
 			vdiff -= dv;
 			vsum += dv;
@@ -3419,7 +3425,7 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
 
 	if (threshold <= gray_min || threshold >= gray_max)
 		threshold = (gray_min+gray_max)/2;
-	
+
 	return threshold;
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -3432,7 +3438,7 @@ int32_t  CxImage::OptimalThreshold(int32_t method, RECT * pBox, CxImage* pContra
  * \param fGlobalLocalBalance: balance between local and global threshold. default = 0.5
  * fGlobalLocalBalance can be from 0.0 (use only local threshold) to 1.0 (use only global threshold)
  * the pContrastMask image must be grayscale with same with and height of the current image,
- * \return true if everything is ok.
+ * \return true if everything is OK.
  * \sa OptimalThreshold
  */
 bool CxImage::AdaptiveThreshold(int32_t method, int32_t nBoxSize, CxImage* pContrastMask, int32_t nBias, float fGlobalLocalBalance)
@@ -3496,7 +3502,7 @@ bool CxImage::AdaptiveThreshold(int32_t method, int32_t nBoxSize, CxImage* pCont
  * Finds the contour of an object with a given color
  * \param color_target: object color
  * \param color_trace: contour color
- * \return true if everything is ok.
+ * \return true if everything is OK.
  * \sa Edge, Contour
  */
 bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
@@ -3504,8 +3510,8 @@ bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
 	if (!pDib) return false;
 
 	RGBQUAD color;
-	bool bFindStartPoint; 
-	POINT StartPoint,CurrentPoint; 
+	bool bFindStartPoint;
+	POINT StartPoint,CurrentPoint;
 	int32_t Direction[8][2]={{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}, {0,1},{1,1}};
 	int8_t nFindPoint,nDirection;
 	int32_t x,y;
@@ -3532,7 +3538,7 @@ bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
 			{
 				bFindStartPoint = true;
 				CurrentPoint.x = StartPoint.x = x;
-				CurrentPoint.y = StartPoint.y = y; 
+				CurrentPoint.y = StartPoint.y = y;
 			}
 		}
 	}
@@ -3545,8 +3551,8 @@ bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
 		color = GetPixelColor(x,y);
 		if (IsInside(x,y) &&
 			color.rgbRed   == color_target.rgbRed   &&
-			color.rgbGreen == color_target.rgbGreen && 
-			color.rgbBlue  == color_target.rgbBlue  ) 
+			color.rgbGreen == color_target.rgbGreen &&
+			color.rgbBlue  == color_target.rgbBlue  )
 		{
 			CurrentPoint.x = x;
 			CurrentPoint.y = y;
@@ -3576,7 +3582,7 @@ bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
 	return true;
 }
 
-#ifndef __MINGW32__ 
+#ifndef __MINGW32__
 ////////////////////////////////////////////////////////////////////////////////
 #include <queue>
 ////////////////////////////////////////////////////////////////////////////////
@@ -3589,7 +3595,7 @@ bool CxImage::Trace(RGBQUAD color_target, RGBQUAD color_trace)
  * \param bSelectFilledArea: if true, the pixels in the region are also set in the selection layer; default = false
  * \param nSelectionLevel: if bSelectFilledArea is true, the selected pixels are set to nSelectionLevel; default = 255
  * Note: nOpacity=0 && bSelectFilledArea=true act as a "magic wand"
- * \return true if everything is ok
+ * \return true if everything is OK
  */
 bool CxImage::FloodFill(const int32_t xStart, const int32_t yStart, const RGBQUAD cFillColor, const uint8_t nTolerance,
 						uint8_t nOpacity, const bool bSelectFilledArea, const uint8_t nSelectionLevel)
@@ -3611,13 +3617,17 @@ bool CxImage::FloodFill(const int32_t xStart, const int32_t yStart, const RGBQUA
 	if ((nTolerance || nOpacity != 255) &&	!(head.biBitCount == 24 || IsGrayScale())){
 		pPalette = new RGBQUAD[head.biClrUsed];
 		memcpy(pPalette, GetPalette(),GetPaletteSize());
-		if (!IncreaseBpp(24))
+		if (!IncreaseBpp(24)) {
+			delete[] pPalette;
 			return false;
+		}
 	}
 
 	uint8_t* pFillMask = (uint8_t*)calloc(head.biWidth * head.biHeight,1);
-	if (!pFillMask)
+	if (!pFillMask) {
+		delete[] pPalette;
 		return false;
+	}
 
 //------------------------------------- Begin of Flood Fill
 	POINT offset[4] = {{-1,0},{0,-1},{1,0},{0,1}};
@@ -3628,8 +3638,8 @@ bool CxImage::FloodFill(const int32_t xStart, const int32_t yStart, const RGBQUA
 	if (IsIndexed()){ //--- Generic indexed image, no tolerance OR Grayscale image with tolerance
 		uint8_t idxRef = GetPixelIndex(xStart,yStart);
 		uint8_t idxFill = GetNearestIndex(cFillColor);
-		uint8_t idxMin = (uint8_t)min(255, max(0,(int32_t)(idxRef - nTolerance)));
-		uint8_t idxMax = (uint8_t)min(255, max(0,(int32_t)(idxRef + nTolerance)));
+		uint8_t idxMin = (uint8_t)max(0,(int)idxRef - nTolerance);
+		uint8_t idxMax = (uint8_t)min(255, (int)idxRef + nTolerance);
 
 		while(!q.empty())
 		{
@@ -3665,12 +3675,12 @@ bool CxImage::FloodFill(const int32_t xStart, const int32_t yStart, const RGBQUA
 	} else { //--- RGB image
 		RGBQUAD cRef = GetPixelColor(xStart,yStart);
 		RGBQUAD cRefMin, cRefMax;
-		cRefMin.rgbRed   = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbRed   - nTolerance)));
-		cRefMin.rgbGreen = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbGreen - nTolerance)));
-		cRefMin.rgbBlue  = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbBlue  - nTolerance)));
-		cRefMax.rgbRed   = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbRed   + nTolerance)));
-		cRefMax.rgbGreen = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbGreen + nTolerance)));
-		cRefMax.rgbBlue  = (uint8_t)min(255, max(0,(int32_t)(cRef.rgbBlue  + nTolerance)));
+		cRefMin.rgbRed   = (uint8_t)max(0,(int)cRef.rgbRed   - nTolerance);
+		cRefMin.rgbGreen = (uint8_t)max(0,(int)cRef.rgbGreen - nTolerance);
+		cRefMin.rgbBlue  = (uint8_t)max(0,(int)cRef.rgbBlue  - nTolerance);
+		cRefMax.rgbRed   = (uint8_t)min(255, (int)cRef.rgbRed   + nTolerance);
+		cRefMax.rgbGreen = (uint8_t)min(255, (int)cRef.rgbGreen + nTolerance);
+		cRefMax.rgbBlue  = (uint8_t)min(255, (int)cRef.rgbBlue  + nTolerance);
 
 		while(!q.empty())
 		{

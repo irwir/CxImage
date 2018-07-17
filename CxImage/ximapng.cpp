@@ -2,7 +2,7 @@
  * File:	ximapng.cpp
  * Purpose:	Platform Independent PNG Image Class Loader and Writer
  * 07/Aug/2001 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximapng.h"
@@ -15,22 +15,20 @@
 void CxImagePNG::ima_png_error(png_struct *png_ptr, char *message)
 {
 	strcpy(info.szLastError,message);
-	longjmp(png_ptr->png_jmpbuf, 1);
+	longjmp(png_ptr->jmp_buf_local, 1);
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if CXIMAGE_SUPPORT_DECODE
 ////////////////////////////////////////////////////////////////////////////////
 void CxImagePNG::expand2to4bpp(uint8_t* prow)
 {
-	uint8_t *psrc,*pdst;
-	uint8_t pos,idx;
 	for(int32_t x=head.biWidth-1;x>=0;x--){
-		psrc = prow + ((2*x)>>3);
-		pdst = prow + ((4*x)>>3);
-		pos = (uint8_t)(2*(3-x%4));
-		idx = (uint8_t)((*psrc & (0x03<<pos))>>pos);
+		uint8_t *psrc = prow + ((2*x)>>3);
+		uint8_t *pdst = prow + ((4*x)>>3);
+		uint8_t pos = (uint8_t)(2*(3-x%4));
+		uint8_t idx = (uint8_t)((*psrc & (0x03<<pos))>>pos);
 		pos = (uint8_t)(4*(1-x%2));
-		*pdst &= ~(0x0F<<pos);
+		*pdst &= ~(0x0Fu<<pos);
 		*pdst |= (idx & 0x0F)<<pos;
 	}
 }
@@ -62,7 +60,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
     /* Set error handling if you are using the setjmp/longjmp method (this is
     * the normal method of doing things with libpng).  REQUIRED unless you
     * set up your own error handlers in the png_create_read_struct() earlier. */
-	if (setjmp(png_ptr->png_jmpbuf)) {
+	if (setjmp(png_ptr->jmp_buf_local)) {
 		/* Free all of the memory associated with the png_ptr and info_ptr */
 		delete [] row_pointers;
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
@@ -80,7 +78,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		head.biWidth = info_ptr->width;
 		head.biHeight= info_ptr->height;
 		info.dwType = CXIMAGE_FORMAT_PNG;
-		longjmp(png_ptr->png_jmpbuf, 1);
+		longjmp(png_ptr->jmp_buf_local, 1);
 	}
 
 	/* calculate new number of channels */
@@ -101,7 +99,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		break;
 	default:
 		strcpy(info.szLastError,"unknown PNG color type");
-		longjmp(png_ptr->png_jmpbuf, 1);
+		longjmp(png_ptr->jmp_buf_local, 1);
 	}
 
 	//find the right pixel depth used for cximage
@@ -111,7 +109,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	if (channels >= 3) pixel_depth=24;
 
 	if (!Create(info_ptr->width, info_ptr->height, pixel_depth, CXIMAGE_FORMAT_PNG)){
-		longjmp(png_ptr->png_jmpbuf, 1);
+		longjmp(png_ptr->jmp_buf_local, 1);
 	}
 
 	/* get metrics */
@@ -136,7 +134,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		SetPaletteColor(2,170,170,170);
 		SetPaletteColor(3,255,255,255);
 	} else SetGrayPalette(); //<DP> needed for grayscale PNGs
-	
+
 	int32_t nshift = max(0,(info_ptr->bit_depth>>3)-1)<<3;
 
 	if (info_ptr->num_trans!=0){ //palette transparency
@@ -189,7 +187,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	}
 
 	// <vho> - handle cancel
-	if (info.nEscape) longjmp(png_ptr->png_jmpbuf, 1);
+	if (info.nEscape) longjmp(png_ptr->jmp_buf_local, 1);
 
 	// row_bytes is the width x number of channels x (bit-depth / 8)
 	row_pointers = new uint8_t[info_ptr->rowbytes + 8];
@@ -212,7 +210,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		do	{
 
 			// <vho> - handle cancel
-			if (info.nEscape) longjmp(png_ptr->png_jmpbuf, 1);
+			if (info.nEscape) longjmp(png_ptr->jmp_buf_local, 1);
 
 #if CXIMAGE_SUPPORT_ALPHA	// <vho>
 			if (AlphaIsValid()) {
@@ -302,7 +300,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 
   } cx_catch {
-	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
+	if (!*message) strncpy(info.szLastError,message,255);
 	if (info.nEscape == -1 && info.dwType == CXIMAGE_FORMAT_PNG) return true;
 	return false;
   }
@@ -342,15 +340,15 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	}
 
    /* Set error handling.  REQUIRED if you aren't supplying your own
-    * error hadnling functions in the png_create_write_struct() call.
+    * error handling functions in the png_create_write_struct() call.
     */
-	if (setjmp(png_ptr->png_jmpbuf)){
+	if (setjmp(png_ptr->jmp_buf_local)){
 		/* If we get here, we had a problem reading the file */
-		if (info_ptr->palette) free(info_ptr->palette);
+		free(info_ptr->palette);
 		png_destroy_write_struct(&png_ptr,  (png_infopp)&info_ptr);
 		cx_throw("Error saving PNG file");
 	}
-            
+
 	/* set up the output control */
 	//png_init_io(png_ptr, hFile);
 
@@ -467,7 +465,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 		info_ptr->num_palette = (png_uint_16) nc;
 		for (int32_t i=0; i<nc; i++)
 			GetPaletteColor(i, &info_ptr->palette[i].red, &info_ptr->palette[i].green, &info_ptr->palette[i].blue);
-	}  
+	}
 
 #if CXIMAGE_SUPPORT_ALPHA	// <vho>
 	//Merge the transparent color with the alpha channel
@@ -480,7 +478,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	}	}	}
 #endif // CXIMAGE_SUPPORT_ALPHA	// <vho>
 
-	int32_t row_size = max(info.dwEffWidth, info_ptr->width*info_ptr->channels*(info_ptr->bit_depth/8));
+	size_t row_size = max(info.dwEffWidth, info_ptr->width*info_ptr->channels*(info_ptr->bit_depth/8));
 	info_ptr->rowbytes = row_size;
 	uint8_t *row_pointers = new uint8_t[row_size];
 
@@ -492,7 +490,9 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	for (int32_t pass = 0; pass < num_pass; pass++){
 		//write image
 		iter.Upset();
+#if CXIMAGE_SUPPORT_ALPHA	// <vho>
 		int32_t ay=head.biHeight-1;
+#endif //CXIMAGE_SUPPORT_ALPHA	// <vho>
 		do	{
 #if CXIMAGE_SUPPORT_ALPHA	// <vho>
 			RGBQUAD c;
@@ -531,7 +531,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	/* It is REQUIRED to call this to finish writing the rest of the file */
 	png_write_end(png_ptr, info_ptr);
 
-	/* if you malloced the palette, free it here */
+	/* if you malloc'ed the palette, free it here */
 	if (info_ptr->palette){
 		delete [] (info_ptr->palette);
 		info_ptr->palette = NULL;
@@ -541,7 +541,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	png_destroy_write_struct(&png_ptr, (png_infopp)&info_ptr);
 
   } cx_catch {
-	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
+	if (!*message) strncpy(info.szLastError,message,255);
 	return FALSE;
   }
 	/* that's it */

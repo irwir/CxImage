@@ -2,8 +2,8 @@
  * File:	ximaraw.cpp
  * Purpose:	Platform Independent RAW Image Class Loader
  * 16/Dec/2007 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
- * 
+ * CxImage version 7.0.3 08/Feb/2019
+ *
  * CxImageRAW (c) May/2006 pdw63
  *
  * based on dcraw.c -- Dave Coffin's raw photo decoder
@@ -53,7 +53,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 
 	// check file header
 	dcr_identify(&dcr);
-	
+
 	if(!dcr.is_raw){
 		cx_throw("CxImageRAW: not a raw image");
 	}
@@ -75,7 +75,7 @@ bool CxImageRAW::Decode(CxFile *hFile)
 		cx_throw("output dimensions returned");
 	}
 
-	// shrinked decoding available and requested?
+	// shrunken decoding available and requested?
 	dcr.shrink = dcr.filters && (dcr.opt.half_size || dcr.opt.threshold || dcr.opt.aber[0] != 1 || dcr.opt.aber[2] != 1);
 	dcr.iheight = (dcr.height + dcr.shrink) >> dcr.shrink;
 	dcr.iwidth  = (dcr.width  + dcr.shrink) >> dcr.shrink;
@@ -221,11 +221,11 @@ bool CxImageRAW::Decode(CxFile *hFile)
 
 #if CXIMAGE_SUPPORT_EXIF
 bool CxImageRAW::GetExifThumbnail(const TCHAR *filename, const TCHAR *outname, int32_t type)
-{	
+{
 	DCRAW  dcr;
 
 	CxIOFile file;
-	if (!file.Open(filename, _T("rb"))) 
+	if (!file.Open(filename, _T("rb")))
 		return false;
 
   cx_try

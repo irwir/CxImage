@@ -1,6 +1,6 @@
 // xImalpha.cpp : Alpha channel functions
 /* 07/08/2001 v1.00 - Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximage.h"
@@ -29,7 +29,7 @@ void CxImage::AlphaSetMax(uint8_t nAlphaMax)
 /**
  * Checks if the image has a valid alpha channel.
  */
-bool CxImage::AlphaIsValid()
+bool CxImage::AlphaIsValid() const
 {
 	return pAlpha!=0;
 }
@@ -45,7 +45,7 @@ void CxImage::AlphaPaletteEnable(bool enable)
 /**
  * True if the alpha palette is enabled for painting.
  */
-bool CxImage::AlphaPaletteIsEnabled()
+bool CxImage::AlphaPaletteIsEnabled() const
 {
 	return info.bAlphaPaletteEnabled;
 }
@@ -84,7 +84,7 @@ void CxImage::AlphaDelete()
 	if (pAlpha) { free(pAlpha); pAlpha=0; }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CxImage::AlphaInvert()
+void CxImage::AlphaInvert() const
 {
 	if (pAlpha) {
 		uint8_t *iSrc=pAlpha;
@@ -97,9 +97,9 @@ void CxImage::AlphaInvert()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Imports an existing alpa channel from another image with the same width and height.
+ * Imports an existing alpha channel from another image with the same width and height.
  */
-bool CxImage::AlphaCopy(CxImage &from)
+bool CxImage::AlphaCopy(const CxImage &from)
 {
 	if (from.pAlpha == NULL || head.biWidth != from.head.biWidth || head.biHeight != from.head.biHeight) return false;
 	if (pAlpha==NULL) pAlpha = (uint8_t*)malloc(head.biWidth * head.biHeight);
@@ -112,13 +112,16 @@ bool CxImage::AlphaCopy(CxImage &from)
 /**
  * Creates the alpha channel from a gray scale image.
  */
-bool CxImage::AlphaSet(CxImage &from)
+bool CxImage::AlphaSet(const CxImage &from)
 {
-	if (!from.IsGrayScale() || head.biWidth != from.head.biWidth || head.biHeight != from.head.biHeight) return false;
-	if (pAlpha==NULL) pAlpha = (uint8_t*)malloc(head.biWidth * head.biHeight);
+	if (!from.IsGrayScale() || head.biWidth != from.head.biWidth || head.biHeight != from.head.biHeight)
+		return false;
+	if (pAlpha==NULL)
+		pAlpha = (uint8_t*)malloc(head.biWidth * head.biHeight);
 	uint8_t* src = from.info.pImage;
 	uint8_t* dst = pAlpha;
-	if (src==NULL || dst==NULL) return false;
+	if (src==NULL || dst==NULL)
+		return false;
 	for (int32_t y=0; y<head.biHeight; y++){
 		memcpy(dst,src,head.biWidth);
 		dst += head.biWidth;
@@ -128,7 +131,7 @@ bool CxImage::AlphaSet(CxImage &from)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Sets the alpha level for a single pixel 
+ * Sets the alpha level for a single pixel
  */
 void CxImage::AlphaSet(const int32_t x,const int32_t y,const uint8_t level)
 {
@@ -136,9 +139,9 @@ void CxImage::AlphaSet(const int32_t x,const int32_t y,const uint8_t level)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Gets the alpha level for a single pixel 
+ * Gets the alpha level for a single pixel
  */
-uint8_t CxImage::AlphaGet(const int32_t x,const int32_t y)
+uint8_t CxImage::AlphaGet(const int32_t x,const int32_t y) const
 {
 	if (pAlpha && IsInside(x,y)) return pAlpha[x+y*head.biWidth];
 	return 0;
@@ -156,11 +159,11 @@ uint8_t* CxImage::AlphaGetPointer(const int32_t x,const int32_t y)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Get alpha value without boundscheck (a bit faster). Pixel must be inside the image.
+ * Get alpha value without bounds check (a bit faster). Pixel must be inside the image.
  *
  * \author ***bd*** 2.2004
  */
-uint8_t CxImage::BlindAlphaGet(const int32_t x,const int32_t y)
+uint8_t CxImage::BlindAlphaGet(const int32_t x,const int32_t y) const
 {
 #ifdef _DEBUG
 	if (!IsInside(x,y) || (pAlpha==0))
@@ -174,7 +177,7 @@ uint8_t CxImage::BlindAlphaGet(const int32_t x,const int32_t y)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Resets the alpha palette 
+ * Resets the alpha palette
  */
 void CxImage::AlphaPaletteClear()
 {
@@ -187,9 +190,9 @@ void CxImage::AlphaPaletteClear()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Checks if the image has a valid alpha palette. 
+ * Checks if the image has a valid alpha palette.
  */
-bool CxImage::AlphaPaletteIsValid()
+bool CxImage::AlphaPaletteIsValid() const
 {
 	RGBQUAD c;
 	for(uint16_t ip=0; ip<head.biClrUsed;ip++){
@@ -292,7 +295,7 @@ bool CxImage::AlphaMirror()
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Exports the alpha channel in a 8bpp grayscale image. 
+ * Exports the alpha channel in a 8bpp grayscale image.
  */
 bool CxImage::AlphaSplit(CxImage *dest)
 {
@@ -319,7 +322,7 @@ bool CxImage::AlphaSplit(CxImage *dest)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * Exports the alpha palette channel in a 8bpp grayscale image. 
+ * Exports the alpha palette channel in a 8bpp grayscale image.
  */
 bool CxImage::AlphaPaletteSplit(CxImage *dest)
 {
@@ -345,7 +348,7 @@ bool CxImage::AlphaPaletteSplit(CxImage *dest)
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Merge in the alpha layer the transparent color mask
- * (previously set with SetTransColor or SetTransIndex) 
+ * (previously set with SetTransColor or SetTransIndex)
  */
 bool CxImage::AlphaFromTransparency()
 {

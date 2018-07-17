@@ -79,12 +79,12 @@ public:
 #define M_SOF13 0xCD
 #define M_SOF14 0xCE
 #define M_SOF15 0xCF
-#define M_SOI   0xD8            // Start Of Image (beginning of datastream)
-#define M_EOI   0xD9            // End Of Image (end of datastream)
+#define M_SOI   0xD8            // Start Of Image (beginning of data stream)
+#define M_EOI   0xD9            // End Of Image (end of data stream)
 #define M_SOS   0xDA            // Start Of Scan (begins compressed data)
 #define M_JFIF  0xE0            // Jfif marker
 #define M_EXIF  0xE1            // Exif marker
-#define M_COM   0xFE            // COMment 
+#define M_COM   0xFE            // COMment
 
 #define PSEUDO_IMAGE_MARKER 0x123; // Extra value.
 
@@ -145,7 +145,7 @@ class CxFileJpg : public jpeg_destination_mgr, public jpeg_source_mgr
 public:
 	enum { eBufSize = 4096 };
 
-	CxFileJpg(CxFile* pFile)
+	explicit CxFileJpg(CxFile* pFile)
 	{
         m_pFile = pFile;
 
@@ -158,8 +158,8 @@ public:
 		skip_input_data = SkipInputData;
 		resync_to_restart = jpeg_resync_to_restart; // use default method
 		term_source = TermSource;
-		next_input_byte = NULL; //* => next byte to read from buffer 
-		bytes_in_buffer = 0;	//* # of bytes remaining in buffer 
+		next_input_byte = NULL; //* => next byte to read from buffer
+		bytes_in_buffer = 0;	//* # of bytes remaining in buffer
 
 		m_pBuffer = new uint8_t[eBufSize];
 	}
@@ -170,14 +170,14 @@ public:
 
 	static void InitDestination(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		pDest->next_output_byte = pDest->m_pBuffer;
 		pDest->free_in_buffer = eBufSize;
 	}
 
 	static boolean EmptyOutputBuffer(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		if (pDest->m_pFile->Write(pDest->m_pBuffer,1,eBufSize)!=(size_t)eBufSize)
 			ERREXIT(cinfo, JERR_FILE_WRITE);
 		pDest->next_output_byte = pDest->m_pBuffer;
@@ -187,7 +187,7 @@ public:
 
 	static void TermDestination(j_compress_ptr cinfo)
 	{
-		CxFileJpg* pDest = (CxFileJpg*)cinfo->dest;
+		CxFileJpg* pDest = static_cast<CxFileJpg *>(cinfo->dest);
 		size_t datacount = eBufSize - pDest->free_in_buffer;
 		/* Write any data remaining in the buffer */
 		if (datacount > 0) {
@@ -202,20 +202,19 @@ public:
 
 	static void InitSource(j_decompress_ptr cinfo)
 	{
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
 		pSource->m_bStartOfFile = TRUE;
 	}
 
 	static boolean FillInputBuffer(j_decompress_ptr cinfo)
 	{
-		size_t nbytes;
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
-		nbytes = pSource->m_pFile->Read(pSource->m_pBuffer,1,eBufSize);
-		if (nbytes <= 0){
-			if (pSource->m_bStartOfFile)	//* Treat empty input file as fatal error 
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
+		size_t nbytes = pSource->m_pFile->Read(pSource->m_pBuffer,1,eBufSize);
+		if (nbytes <= 0) {
+			if (pSource->m_bStartOfFile)	//* Treat empty input file as fatal error
 				ERREXIT(cinfo, JERR_INPUT_EMPTY);
 			WARNMS(cinfo, JWRN_JPEG_EOF);
-			// Insert a fake EOI marker 
+			// Insert a fake EOI marker
 			pSource->m_pBuffer[0] = (JOCTET) 0xFF;
 			pSource->m_pBuffer[1] = (JOCTET) JPEG_EOI;
 			nbytes = 2;
@@ -228,7 +227,7 @@ public:
 
 	static void SkipInputData(j_decompress_ptr cinfo, long num_bytes)
 	{
-		CxFileJpg* pSource = (CxFileJpg*)cinfo->src;
+		CxFileJpg* pSource = static_cast<CxFileJpg *>(cinfo->src);
 		if (num_bytes > 0){
 			while (num_bytes > (int32_t)pSource->bytes_in_buffer){
 				num_bytes -= (int32_t)pSource->bytes_in_buffer;
@@ -268,7 +267,7 @@ public:
 		DECODE_NOSMOOTH = 0x800,
 		ENCODE_SUBSAMPLE_422 = 0x1000,
 		ENCODE_SUBSAMPLE_444 = 0x2000
-	}; 
+	};
 
 	int32_t m_nPredictor;
 	int32_t m_nPointTransform;

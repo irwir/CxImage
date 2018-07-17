@@ -2,7 +2,7 @@
  * File:	ximajbg.cpp
  * Purpose:	Platform Independent JBG Image Class Loader and Writer
  * 18/Aug/2002 Davide Pizzolato - www.xdp.it
- * CxImage version 7.0.2 07/Feb/2011
+ * CxImage version 7.0.3 08/Feb/2019
  */
 
 #include "ximajbg.h"
@@ -24,7 +24,6 @@ bool CxImageJBG::Decode(CxFile *hFile)
 	uint32_t xmax = 4294967295UL, ymax = 4294967295UL;
 	uint32_t len, cnt;
 	uint8_t *buffer=0,*p;
-	int32_t result;
 
   cx_try
   {
@@ -34,7 +33,7 @@ bool CxImageJBG::Decode(CxFile *hFile)
 	buffer = (uint8_t*)malloc(JBIG_BUFSIZE);
 	if (!buffer) cx_throw("Sorry, not enough memory available!");
 
-	result = JBG_EAGAIN;
+	int32_t result = JBG_EAGAIN;
 	do {
 		len = hFile->Read(buffer, 1, JBIG_BUFSIZE);
 		if (!len) break;
@@ -50,7 +49,7 @@ bool CxImageJBG::Decode(CxFile *hFile)
 	if (hFile->Error())
 		cx_throw("Problem while reading input file");
 	if (result != JBG_EOK && result != JBG_EOK_INTR)
-		cx_throw("Problem with input file"); 
+		cx_throw("Problem with input file");
 
 	int32_t w, h, bpp, planes, ew;
 
@@ -96,7 +95,7 @@ bool CxImageJBG::Decode(CxFile *hFile)
 
   } cx_catch {
 	jbg_dec_free(&jbig_state);
-	if (buffer) free(buffer);
+	free(buffer);
 	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
 	if (info.nEscape == -1 && info.dwType == CXIMAGE_FORMAT_JBG) return true;
 	return false;
@@ -115,12 +114,12 @@ bool CxImageJBG::Encode(CxFile * hFile)
 		return false;
 	}
 
-	int32_t w, h, bpp, planes, ew, i, j, x, y;
+	int32_t w, h, planes, ew, x, y;
 
 	w = head.biWidth;
 	h = head.biHeight;
 	planes = 1;
-	bpp = (planes+7)>>3;
+//	int32_t bpp = (planes+7)>>3;
 	ew = (w + 7)>>3;
 
 	uint8_t mask;
@@ -134,8 +133,8 @@ bool CxImageJBG::Encode(CxFile * hFile)
 	}
 
 	for (y=0; y<h; y++){
-		i= y*ew;
-		j= (h-y-1)*info.dwEffWidth;
+		int i= y*ew;
+		int j= (h-y-1)*info.dwEffWidth;
 		for (x=0; x<ew; x++){
 			buffer[i + x]=info.pImage[j + x]^mask;
 		}
@@ -148,7 +147,7 @@ bool CxImageJBG::Encode(CxFile * hFile)
     //jbg_enc_lrlmax(&jbig_state, 800, 600);
 
 	// Specify a few other options (each is ignored if negative)
-	int32_t dl = -1, dh = -1, d = -1, l0 = -1, mx = -1;
+	int32_t dl = -1, dh = -1, /*d = -1,*/ l0 = -1, mx = -1;
 	int32_t options = JBG_TPDON | JBG_TPBON | JBG_DPON;
 	int32_t order = JBG_ILEAVE | JBG_SMID;
 	jbg_enc_lrange(&jbig_state, dl, dh);

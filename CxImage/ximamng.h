@@ -38,7 +38,7 @@ extern "C" {
 
 //uint32_t _stdcall RunMNGThread(void *lpParam);
 
-typedef struct tagmngstuff 
+typedef struct tagmngstuff
 {
 	CxFile		*file;
 	uint8_t		*image;
@@ -75,7 +75,7 @@ public:
 
 	int32_t Resume();
 	void SetSpeed(float speed);
-	
+
 	mng_handle hmng;
 	mngstuff mnginfo;
 protected:
